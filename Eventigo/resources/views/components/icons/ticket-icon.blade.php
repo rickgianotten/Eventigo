@@ -1,0 +1,1 @@
+<span {{$attributes(['class' =>"material-symbols-outlined text-orange" ])}}>confirmation_number</span>

@@ -1,0 +1,1 @@
+<span class="text-white text-sm bg-orange-600 px-2.5 py-0.5 rounded-xl">{{$slot}}</span>

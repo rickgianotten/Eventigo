@@ -1,0 +1,40 @@
+<?php
+
+namespace Database\Factories;
+
+use App\Models\Category;
+use App\Models\Company;
+use App\Models\User;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
+
+/**
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\events>
+ */
+class EventFactory extends Factory
+{
+    /**
+     * Define the model's default state.
+     *
+     * @return array<string, mixed>
+     */
+    public function definition(): array
+    {
+        $title = fake()->word();
+        return [
+            'title'=> $title,
+            'slug' => Str::slug($title),
+            'description' => fake()->sentence(),
+            'start_time' => fake()->dateTime(),
+            'end_time' => fake()->dateTime(),
+            'time' => fake()->time(),
+            'location' => fake()->country(),
+            'city' => fake()->city(),
+            'street' => fake()->streetAddress(),
+            'postal_code' => fake()->postcode(),
+            'company_id' => Company::factory(),
+            'image_path' => fake()->imageUrl(),
+            'category_id' => Category::inRandomOrder()->first()->id
+        ];
+    }
+}

@@ -1,0 +1,1 @@
+<span class="material-symbols-outlined">arrow_right_alt</span>

@@ -1,0 +1,1 @@
+<span {{$attributes->merge(['class' => "material-symbols-outlined text-light-grey"])}}>location_on</span>
