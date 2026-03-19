@@ -110,17 +110,29 @@
                                     <template x-for="(ticket, index) in tickets">
                                         <div class="border border-light-grey/20 rounded-md p-4 space-y-5">
                                             <div class="grid gap-4 md:grid-cols-3">
-                                                <x-form.select name="'tickets['+index+'][type]'"  label="Ticket type"  :required="false">
-                                                    <option value="Regular">Regular</option>
-                                                    <option value="VIP">VIP</option>
-                                                </x-form.select>
+                                                <div>
+                                                    <label :for="'ticket_type_' + index" class="flex items-center text-white font-medium">Ticket type</label>
+                                                    <select :name="'tickets['+index+'][type]'" class="text-white bg-light-grey/10 rounded-lg py-1.5 px-2 w-full border border-light-grey/20 focus:ring-0 focus:outline-none">
+                                                        <option value="Regular">Regular</option>
+                                                        <option value="VIP">VIP</option>
+                                                    </select>
+                                                </div>
 
-                                                <x-form.form-group type="number" name="ticket" label="Price ($)" placeholder="75,00"  :required="false"/>
-
-                                                <x-form.form-group type="number"  name="ticket" label="Quantity available" placeholder="100"  :required="false"/>
+                                                <div>
+                                                    <label :for="'ticket_price_' + index" class="flex items-center text-white font-medium">Price ($)</label>
+                                                    <input :id="'ticket_price_' + index" type="number" :name="'tickets['+index+'][price]'" placeholder="75,00" step="0.01" min="1" class="text-white bg-light-grey/10 rounded-lg py-1.5 px-2 w-full border border-light-grey/20 focus:border-orange focus:ring-0 focus:outline-none">
+                                                </div>
+                                                                                                
+                                                <div>
+                                                    <label :for="'ticket_quantity_' + index" class="flex items-center text-white font-medium">Quantity available</label>
+                                                    <input :id="'ticket_quantity_' + index" type="number" :name="'tickets['+index+'][quantity]'" placeholder="100" step="1" min="1" class="text-white bg-light-grey/10 rounded-lg py-1.5 px-2 w-full border border-light-grey/20 focus:border-orange focus:ring-0 focus:outline-none">
+                                                </div>
                                             </div>
 
-                                            <x-form.form-group type="text" name="ticket" label="Description (optional)" placeholder=" e.g. Inc. food & drinks" :required="false"/>
+                                            <div>
+                                                <label :for="'ticket_description_' + index" class="flex items-center text-white font-medium">Description (optional)</label>
+                                                <input :id="'ticket_description_' + index" type="text" :name="'tickets['+index+'][description]'" placeholder=" e.g. Inc. food & drinks" class="text-white bg-light-grey/10 rounded-lg py-1.5 px-2 w-full border border-light-grey/20 focus:border-orange focus:ring-0 focus:outline-none">
+                                            </div>  
                                             
                                         </div>
                                     </template>
