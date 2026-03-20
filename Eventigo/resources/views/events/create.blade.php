@@ -29,15 +29,9 @@
                     <button @click="step = 4" class="h-10 w-10 rounded-full flex items-center justify-center bg-mid-blue" :class="step == 4 && 'bg-orange'">
                         <x-icons.upload-image-icon :class="'step == 4 ? text-white : text-light-grey'"/>
                     </button>
-
-                    <div class="h-px flex-1 bg-light-grey/30"></div>
-
-                    <button @click="step = 5" class="h-10 w-10 rounded-full flex items-center justify-center bg-mid-blue" :class="step == 5 && 'bg-orange'">
-                        <x-icons.check-icon :class="'step == 5 ? text-white : text-light-grey'"/>
-                    </button>
                 </div>
 
-                <x-form.form>
+                <x-form.form id="createEventForm" method="POST">
                     <div x-show="step == 1 ">
                         <x-cards.card>
                             <div class="p-4 space-y-6">
@@ -200,11 +194,6 @@
                         </x-cards.card>
                     </div>
 
-                    <div x-show="step == 5 ">
-                        <x-cards.card>
-                            <button class="text-white" type="submit">publish</button>
-                        </x-cards.card>
-                    </div>
                 </x-form.form>
 
                 <div class="flex justify-between">
@@ -218,8 +207,11 @@
                                 save as concept
                             </button>
                         @endcan
-                        <button @click="step += 1" style="background: var(--gradient-button)" :class="step >= 5  ? 'hidden' : 'flex items-center gap-2 rounded-md text-white px-3 py-1 cursor-pointer hover:opacity-75'">
+                        <button @click="step += 1" style="background: var(--gradient-button)" :class="step >= 4  ? 'hidden' : 'flex items-center gap-2 rounded-md text-white px-3 py-1 cursor-pointer hover:opacity-75'">
                             next <x-icons.arrow-right/>
+                        </button>
+                        <button type="submit" form="createEventForm" style="background: var(--gradient-button)" :class="step == 4 ? 'flex items-center gap-2 rounded-md text-white px-3 py-1 cursor-pointer hover:opacity-75' : 'hidden'">
+                            preview
                         </button>
                     </div>
                 </div>
