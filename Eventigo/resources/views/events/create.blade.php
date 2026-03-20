@@ -31,7 +31,7 @@
                     </button>
                 </div>
 
-                <x-form.form id="createEventForm" method="POST" action="{{route('events.preview')}}">
+                <x-form.form id="createEventForm" method="POST" action="{{route('events.create.preview')}}">
                     <div x-show="step == 1 ">
                         <x-cards.card>
                             <div class="p-4 space-y-6">
