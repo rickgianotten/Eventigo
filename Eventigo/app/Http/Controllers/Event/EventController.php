@@ -80,4 +80,8 @@ class EventController extends Controller
 
         return view('events.create', ['categories' => $categories, 'eventImages' => $eventImages]);
     }
+
+    public function preview(Request $request){
+        return $request->all();
+    }
 }
