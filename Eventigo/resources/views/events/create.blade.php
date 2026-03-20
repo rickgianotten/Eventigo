@@ -149,7 +149,6 @@
                             <div class="p-4">
                                 <div>
                                     <h2 class="text-white text-xl font-bold">Media</h2>
-                                    {{-- <p class="text-light-grey text-sm">Upload a cover image. </p> --}}
                                 </div>
                                 <div>
                                     <div class="mb-5">
@@ -209,7 +208,7 @@
                 </x-form.form>
 
                 <div class="flex justify-between">
-                    <button @click="step -= 1" class="" :class="step <= 1  ? 'hidden' : 'flex items-center gap-2 rounded-md text-light-grey/50 text-sm cursor-pointer hover:opacity-75' ">
+                    <button @click="step -= 1" class="" :class="step <= 1  ? 'hidden' : 'flex items-center gap-2 rounded-md text-light-grey/80 text-sm cursor-pointer hover:opacity-75' ">
                         <x-icons.arrow-left/> previous
                     </button>
 

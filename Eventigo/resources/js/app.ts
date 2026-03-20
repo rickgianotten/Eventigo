@@ -1,3 +1,3 @@
 import './bootstrap.js';
 import './calculateTickets.js';
-import './previewImage.js';
+import './create-event/previewImage.js';
