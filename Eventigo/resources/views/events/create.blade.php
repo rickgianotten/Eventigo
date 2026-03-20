@@ -21,12 +21,18 @@
                     <div class="h-px flex-1 bg-light-grey/30"></div>
 
                     <button @click="step = 3" class="h-10 w-10 rounded-full flex items-center justify-center bg-mid-blue" :class="step == 3 && 'bg-orange'">
-                        <x-icons.ticket-icon :class="'step == 3 ? text-white : text-light-grey'"/>
+                        <x-icons.group-add-icon :class="'step == 3 ? text-white : text-light-grey'"/>
+                    </button>
+
+                    <div class="h-px flex-1 bg-light-grey/30"></div>
+
+                    <button @click="step = 4" class="h-10 w-10 rounded-full flex items-center justify-center bg-mid-blue" :class="step == 4 && 'bg-orange'">
+                        <x-icons.ticket-icon :class="'step == 4 ? text-white : text-light-grey'"/>
                     </button>
 
                     <div class="h-px flex-1 bg-light-grey/30"></div>
                     
-                    <button @click="step = 4" class="h-10 w-10 rounded-full flex items-center justify-center bg-mid-blue" :class="step == 4 && 'bg-orange'">
+                    <button @click="step = 5" class="h-10 w-10 rounded-full flex items-center justify-center bg-mid-blue" :class="step == 4 && 'bg-orange'">
                         <x-icons.upload-image-icon :class="'step == 4 ? text-white : text-light-grey'"/>
                     </button>
                 </div>
@@ -92,7 +98,48 @@
                         </x-cards.card>
                     </div>
 
-                    <div x-show="step == 3 ">
+                    <div x-show="step == 3">
+                        <x-cards.card>
+                            <div class="p-4 space-y-6">
+                                <div class="mb-6">
+                                    <h2 class="text-white text-xl font-bold">Participants</h2>
+                                    <p class="text-light-grey text-sm">Add participants, speakers, or artists to your event. </p>
+                                </div>
+                                <div x-data="{participants: [1]}" class="space-y-5">
+                                    <template x-for="(participan, index) in participants">
+                                        <div class="border border-light-grey/20 rounded-md p-4 space-y-5">
+                                            <div class="grid gap-4 md:grid-cols-3">
+                                                <div>
+                                                    <label :for="'participan_name_' + index" class="flex items-center text-white font-medium">Name</label>
+                                                    <input :id="'participan_name_' + index" type="text" :name="'participants['+index+'][name]'" placeholder="full name" class="text-white bg-light-grey/10 rounded-lg py-1.5 px-2 w-full border border-light-grey/20 focus:border-orange focus:ring-0 focus:outline-none">
+                                                </div>
+                                                                                                
+                                                <div>
+                                                    <label :for="'participan_email_' + index" class="flex items-center text-white font-medium">Email</label>
+                                                    <input :id="'participan_email_' + index" type="email" :name="'participants['+index+'][email]'" placeholder="name@email.com" class="text-white bg-light-grey/10 rounded-lg py-1.5 px-2 w-full border border-light-grey/20 focus:border-orange focus:ring-0 focus:outline-none">
+                                                </div>
+
+                                                <div>
+                                                    <label :for="'participan_role_' + index" class="flex items-center text-white font-medium">Role</label>
+                                                    <select :name="'participants['+index+'][role]'" class="text-white bg-light-grey/10 rounded-lg py-1.5 px-2 w-full border border-light-grey/20 focus:ring-0 focus:outline-none">
+                                                        <option value="artist">artist</option>
+                                                        <option value="speaker">speaker</option>
+                                                        <option value="Exhibitor">Exhibitor</option>
+                                                        <option value="vendor">Vendor</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </template>
+                                    <button @click="participants.push(participants.length)" type="button" class="bg-dark-blue text-light-grey text-xs w-full py-2 rounded-lg border border-dashed border-light-grey/20 cursor-pointer hover:bg-orange hover:text-white">
+                                        add participan
+                                    </button>
+                                </div>
+                            </div>
+                        </x-cards.card>
+                    </div>
+
+                    <div x-show="step == 4 ">
                         <x-cards.card>
                             <div class="p-4 space-y-6">
                                 <div>
@@ -138,7 +185,7 @@
                         </x-cards.card>
                     </div>
 
-                    <div x-show="step == 4 ">
+                    <div x-show="step == 5 ">
                         <x-cards.card>
                             <div class="p-4">
                                 <div>
@@ -207,10 +254,10 @@
                                 save as concept
                             </button>
                         @endcan
-                        <button @click="step += 1" style="background: var(--gradient-button)" :class="step >= 4  ? 'hidden' : 'flex items-center gap-2 rounded-md text-white px-3 py-1 cursor-pointer hover:opacity-75'">
+                        <button @click="step += 1" style="background: var(--gradient-button)" :class="step == 5  ? 'hidden' : 'flex items-center gap-2 rounded-md text-white px-3 py-1 cursor-pointer hover:opacity-75'">
                             next <x-icons.arrow-right/>
                         </button>
-                        <button type="submit" form="createEventForm" style="background: var(--gradient-button)" :class="step == 4 ? 'flex items-center gap-2 rounded-md text-white px-3 py-1 cursor-pointer hover:opacity-75' : 'hidden'">
+                        <button type="submit" form="createEventForm" style="background: var(--gradient-button)" :class="step == 5 ? 'flex items-center gap-2 rounded-md text-white px-3 py-1 cursor-pointer hover:opacity-75' : 'hidden'">
                             preview
                         </button>
                     </div>
