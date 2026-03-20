@@ -82,6 +82,7 @@ class EventController extends Controller
     }
 
     public function preview(Request $request){
-        return $request->all();
+        $eventData = $request->all();
+        return $eventData;
     }
 }

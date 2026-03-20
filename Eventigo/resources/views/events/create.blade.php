@@ -21,7 +21,7 @@
                     <div class="h-px flex-1 bg-light-grey/30"></div>
 
                     <button @click="step = 3" class="h-10 w-10 rounded-full flex items-center justify-center bg-mid-blue" :class="step == 3 && 'bg-orange'">
-                        <x-icons.group-add-icon :class="'step == 3 ? text-white : text-light-grey'"/>
+                        <x-icons.group-icon :class="'step == 3 ? text-white : text-light-grey'"/>
                     </button>
 
                     <div class="h-px flex-1 bg-light-grey/30"></div>
@@ -108,6 +108,12 @@
                                 <div x-data="{participants: [1]}" class="space-y-5">
                                     <template x-for="(participan, index) in participants">
                                         <div class="border border-light-grey/20 rounded-md p-4 space-y-5">
+                                            <div class="flex justify-between">
+                                                <h4 x-text="`participant ${index + 1}`" class="text-orange"></h4>
+                                                <button type="button" @click="participants.splice(index, 1)" :class="index == 0 ? 'hidden' : 'text-red-500 cursor-pointer hover:text-red-600'">
+                                                    delete
+                                                </button>
+                                            </div>
                                             <div class="grid gap-4 md:grid-cols-3">
                                                 <div>
                                                     <label :for="'participan_name_' + index" class="flex items-center text-white font-medium">Name</label>
@@ -115,15 +121,15 @@
                                                 </div>
                                                                                                 
                                                 <div>
-                                                    <label :for="'participan_email_' + index" class="flex items-center text-white font-medium">Email</label>
+                                                    <label :for="'participan_email_' + index" class="flex items-center text-white font-medium">Contact email</label>
                                                     <input :id="'participan_email_' + index" type="email" :name="'participants['+index+'][email]'" placeholder="name@email.com" class="text-white bg-light-grey/10 rounded-lg py-1.5 px-2 w-full border border-light-grey/20 focus:border-orange focus:ring-0 focus:outline-none">
                                                 </div>
 
                                                 <div>
                                                     <label :for="'participan_role_' + index" class="flex items-center text-white font-medium">Role</label>
                                                     <select :name="'participants['+index+'][role]'" class="text-white bg-light-grey/10 rounded-lg py-1.5 px-2 w-full border border-light-grey/20 focus:ring-0 focus:outline-none">
-                                                        <option value="artist">artist</option>
-                                                        <option value="speaker">speaker</option>
+                                                        <option value="artist">Artist</option>
+                                                        <option value="speaker">Speaker</option>
                                                         <option value="Exhibitor">Exhibitor</option>
                                                         <option value="vendor">Vendor</option>
                                                     </select>
@@ -150,6 +156,12 @@
                                 <div x-data="{tickets: [1] }" class="space-y-5">
                                     <template x-for="(ticket, index) in tickets">
                                         <div class="border border-light-grey/20 rounded-md p-4 space-y-5">
+                                            <div class="flex justify-between">
+                                                <h4 x-text="`ticket ${index + 1}`" class="text-orange"></h4>
+                                                <button type="button" @click="tickets.splice(index, 1)" :class="index == 0 ? 'hidden' : 'text-red-500 cursor-pointer hover:text-red-600'">
+                                                    delete
+                                                </button>
+                                            </div>
                                             <div class="grid gap-4 md:grid-cols-3">
                                                 <div>
                                                     <label :for="'ticket_type_' + index" class="flex items-center text-white font-medium">Ticket type</label>
