@@ -32,8 +32,8 @@
 
                     <div class="h-px flex-1 bg-light-grey/30"></div>
                     
-                    <button @click="step = 5" class="h-10 w-10 rounded-full flex items-center justify-center bg-mid-blue" :class="step == 4 && 'bg-orange'">
-                        <x-icons.upload-image-icon :class="'step == 4 ? text-white : text-light-grey'"/>
+                    <button @click="step = 5" class="h-10 w-10 rounded-full flex items-center justify-center bg-mid-blue" :class="step == 5 && 'bg-orange'">
+                        <x-icons.upload-image-icon :class="'step == 5 ? text-white : text-light-grey'"/>
                     </button>
                 </div>
 
@@ -147,13 +147,20 @@
 
                     <div x-show="step == 4 ">
                         <x-cards.card>
-                            <div class="p-4 space-y-6">
-                                <div>
-                                    <h2 class="text-white text-xl font-bold">Tickets</h2>
-                                    <p class="text-light-grey text-sm">Set your ticket types and prices. </p>
+                            <div class="p-4 space-y-6" x-data="{freeEvent: false}">
+                                <div class="flex justify-between">
+                                    <div>
+                                        <h2 class="text-white text-xl font-bold">Tickets</h2>
+                                        <p class="text-light-grey text-sm">Set your ticket types and prices. </p>
+                                    </div>
+                                    <label class="inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" name="free_event" class="sr-only peer" @checked(old('free_event')) x-model="freeEvent">
+                                        <span class="select-none ms-3 text-md font-medium text-heading text-light-grey/80 mr-4">Free event</span>
+                                        <div class="relative w-9 h-5 bg-light-grey/10 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-light-grey/10 dark:peer-focus:ring-light-grey/10 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-buffer after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-orange"></div>
+                                    </label>
                                 </div>
 
-                                <div x-data="{tickets: [1] }" class="space-y-5">
+                                <div x-data="{tickets: [1] }" class="space-y-5" x-show="!freeEvent">
                                     <template x-for="(ticket, index) in tickets">
                                         <div class="border border-light-grey/20 rounded-md p-4 space-y-5">
                                             <div class="flex justify-between">
@@ -192,6 +199,15 @@
                                     <button @click="tickets.push(tickets.length)" type="button" class="bg-dark-blue text-light-grey text-xs w-full py-2 rounded-lg border border-dashed border-light-grey/20 cursor-pointer hover:bg-orange hover:text-white">
                                         add ticket
                                     </button>
+                                </div>
+
+                                <div x-show="freeEvent" class="border border-light-grey/20 rounded-md p-4 space-y-5 text-center">
+                                    <h3 class="text-green-500 text-3xl mb-0 font-bold">Free event</h3>
+                                    <p class="text-light-grey text-sm">Visitors can register for free.</p>
+                                    <div class="flex justify-center">
+                                        <x-form.form-group label="Max. amount of visitors" type="number" name="max_amount_of_visitors" min="1" step="1" :required="false" placeholder="amount of visitors"/>
+                                    </div>
+
                                 </div>
                             </div>
                         </x-cards.card>
