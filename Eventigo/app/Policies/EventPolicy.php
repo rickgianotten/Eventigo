@@ -65,6 +65,6 @@ class EventPolicy
     }
     public function saveAsConcept(User $user): bool
     {
-        return $user->company->isPremium();
+        return $user->company?->isPremium() || $user->ownedCompany?->isPremium();
     }
 }
