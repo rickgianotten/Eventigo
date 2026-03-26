@@ -50,7 +50,7 @@
 
                                 <div>
                                     <h3 class="text-white mb-2">Category</h3>
-                                    <div class="flex gap-4">
+                                    <div class="flex flex-wrap gap-4 ">
                                         @foreach ($categories as $category)
                                             <x-form.radio-button :value="$category->name" :id="$category->name" name="category" :required="false">
                                                 {{$category->name}}
