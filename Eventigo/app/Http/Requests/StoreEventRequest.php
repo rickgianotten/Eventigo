@@ -22,42 +22,44 @@ class StoreEventRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'title' => ['required', 'string', 'max:255'],
-            'category' => ['required', Rule::exists('categories', 'slug')],
+        return[
+            // 'action' => ['required', 'in:concept,publish'],
 
-            'short_description' => ['required', 'string', 'max:120'],
-            'long_description' => ['nullable', 'string', 'max:500'],
+            'title'             => ['required_unless:action,concept', 'nullable', 'string', 'max:255'],
+            'category'          => ['required_unless:action,concept', 'nullable', Rule::exists('categories', 'slug')],
 
-            'location' => ['required', 'string'],
-            'city' => ['required','string'],
-            'street' => ['required', 'string'],
+            'short_description' => ['required_unless:action,concept', 'nullable', 'string', 'max:120'],
+            'long_description'  => ['nullable', 'string', 'max:500'],
 
-            'start_date' => ['required', 'date', 'after:today'],
-            'end_date' => ['required', 'date', 'after:start_date'],
+            'location'          => ['required_unless:action,concept', 'nullable', 'string'],
+            'city'              => ['required_unless:action,concept', 'nullable', 'string'],
+            'street'            => ['required_unless:action,concept', 'nullable', 'string'],
 
-            'start_time' => ['required', 'date_format:H:i'],
-            'end_time' => ['required', 'date_format:H:i'],
+            'start_date'        => ['required_unless:action,concept', 'nullable', 'date', 'after:today'],
+            'end_date'          => ['required_unless:action,concept', 'nullable', 'date', 'after:start_date'],
 
-            'participants' => ['required', 'array', 'min:1'],
-            'participants.*' => ['required', 'array:name,email,role'],
-            'participants.*.name' => ['required', 'string', 'max:255'],
-            'participants.*.email' => ['required', 'email', 'max:255'],
-            'participants.*.role' => ['required', Rule::in(['artist','speaker','exhibitor','vendor' ])],
+            'start_time'        => ['required_unless:action,concept', 'nullable', 'date_format:H:i'],
+            'end_time'          => ['required_unless:action,concept', 'nullable', 'date_format:H:i'],
 
-            'tickets' => ['required_unless:free_event,true,1,yes,on', 'array', 'min:1'],
-            'tickets.*' => ['required', 'array:type,price,quantity,description'],
-            'tickets.*.type' => ['required', Rule::in(['Regular','VIP'])],
-            'tickets.*.price' => ['required', 'decimal:2', 'min:0'],
-            'tickets.*.quantity' => ['required', 'integer', 'min:1'],
+            'participants'      => ['required_unless:action,concept', 'nullable', 'array', 'min:1'],
+            'participants.*'    => ['nullable', 'array:name,email,role'],
+            'participants.*.name'  => ['required_unless:action,concept', 'nullable', 'string', 'max:255'],
+            'participants.*.email' => ['required_unless:action,concept', 'nullable', 'email', 'max:255'],
+            'participants.*.role'  => ['required_unless:action,concept', 'nullable', Rule::in(['artist', 'speaker', 'exhibitor', 'vendor'])],
+
+            'tickets'           => ['required_unless:free_event,true,1,yes,on', 'nullable', 'array', 'min:1'],
+            'tickets.*'         => ['nullable', 'array:type,price,quantity,description'],
+            'tickets.*.type'        => ['required_unless:action,concept', 'nullable', Rule::in(['Regular', 'VIP'])],
+            'tickets.*.price'       => ['required_unless:action,concept', 'nullable', 'decimal:2', 'min:0'],
+            'tickets.*.quantity'    => ['required_unless:action,concept', 'nullable', 'integer', 'min:1'],
             'tickets.*.description' => ['nullable', 'string', 'max:120'],
 
-            'free_event' => ['nullable'],
+            'free_event'            => ['nullable'],
 
             'max_amount_of_visitors' => ['nullable', 'integer', 'min:1', 'required_if:free_event,true,1,yes,on'],
 
-            'image_upload' => ['nullable', 'image', 'required_without:event_image'],
-            'event_image' => ['nullable', 'string', 'required_without:image_upload'],
+            'image_upload' => ['nullable', 'image', 'required_unless:action,concept,event_image,null'],
+            'event_image'  => ['nullable', 'string', 'required_unless:action,concept,image_upload,null'],
         ];
     }
 }
