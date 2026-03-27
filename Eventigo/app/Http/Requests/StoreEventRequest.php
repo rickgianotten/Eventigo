@@ -23,7 +23,6 @@ class StoreEventRequest extends FormRequest
     public function rules(): array
     {
         return[
-            // 'action' => ['required', 'in:concept,publish'],
 
             'title'             => ['required_unless:action,concept', 'nullable', 'string', 'max:255'],
             'category'          => ['required_unless:action,concept', 'nullable', Rule::exists('categories', 'slug')],
@@ -35,7 +34,7 @@ class StoreEventRequest extends FormRequest
             'city'              => ['required_unless:action,concept', 'nullable', 'string'],
             'street'            => ['required_unless:action,concept', 'nullable', 'string'],
 
-            'start_date'        => ['required_unless:action,concept', 'nullable', 'date', 'after:today'],
+            'start_date'        => ['required_unless:action,concept', 'nullable', 'date', 'after_or_equal:today'],
             'end_date'          => ['required_unless:action,concept', 'nullable', 'date', 'after:start_date'],
 
             'start_time'        => ['required_unless:action,concept', 'nullable', 'date_format:H:i'],
@@ -60,6 +59,36 @@ class StoreEventRequest extends FormRequest
 
             'image_upload' => ['nullable', 'image', 'required_unless:action,concept,event_image,null'],
             'event_image'  => ['nullable', 'string', 'required_unless:action,concept,image_upload,null'],
+        ];
+    }
+    public function messages(): array
+    {
+    return [
+            'title.required_unless'             => 'The title field is required.',
+            'category.required_unless'          => 'The category field is required.',
+            'short_description.required_unless' => 'The short description field is required.',
+            'location.required_unless'          => 'The location field is required.',
+            'city.required_unless'              => 'The city field is required.',
+            'street.required_unless'            => 'The street field is required.',
+            'start_date.required_unless'        => 'The start date field is required.',
+            'end_date.required_unless'          => 'The end date field is required.',
+            'start_time.required_unless'        => 'The start time field is required.',
+            'end_time.required_unless'          => 'The end time field is required.',
+
+            'participants.required_unless'          => 'At least one participant is required.',
+            'participants.*.name.required_unless'   => 'The participant name field is required.',
+            'participants.*.email.required_unless'  => 'The participant email field is required.',
+            'participants.*.role.required_unless'   => 'The participant role field is required.',
+
+            'tickets.required_unless'               => 'At least one ticket is required.',
+            'tickets.*.type.required_unless'        => 'The ticket type field is required.',
+            'tickets.*.price.required_unless'       => 'The ticket price field is required.',
+            'tickets.*.quantity.required_unless'    => 'The ticket quantity field is required.',
+
+            'max_amount_of_visitors.required_if' => 'The max amount of visitors field is required',
+
+            'image_upload.required_unless'  => 'A cover image is required.',
+            'event_image.required_unless'   => 'A cover image is required.',
         ];
     }
 }
