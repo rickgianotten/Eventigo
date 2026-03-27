@@ -37,7 +37,7 @@
                     </button>
                 </div>
 
-                <form id="createEventForm" method="POST" action="{{route('events.create.storePreview')}}" enctype="multipart/form-data">
+                <form id="createEventForm" method="POST" action="{{route('events.create.storePreview')}}" enctype="multipart/form-data" novalidate>
                     @csrf
                     <div x-show="step == 1 ">
                         <x-cards.card>
@@ -108,7 +108,7 @@
                                     <p class="text-light-grey text-sm">Add participants, speakers, or artists to your event. </p>
                                 </div>
                                 <div x-data="{participants: [1]}" class="space-y-5">
-                                    <template x-for="(participant, index) in participants">
+                                    <template x-for="(participant, index) in participants" :key="index">
                                         <div class="border border-light-grey/20 rounded-md p-4 space-y-5">
                                             <div class="flex justify-between">
                                                 <h4 x-text="`participant ${index + 1}`" class="text-orange"></h4>
@@ -149,7 +149,7 @@
 
                     <div x-show="step == 4 ">
                         <x-cards.card>
-                            <div class="p-4 space-y-6" x-data="{freeEvent: false}">
+                            <div class="p-4 space-y-6" x-data="{freeEvent: {{old('free_event') ? 'true' : 'false'}},tickets: [1]}">
                                 <div class="flex justify-between">
                                     <div>
                                         <h2 class="text-white text-xl font-bold">Tickets</h2>
@@ -162,8 +162,8 @@
                                     </label>
                                 </div>
 
-                                <div x-data="{tickets: [1] }" class="space-y-5" x-show="!freeEvent">
-                                    <template x-for="(ticket, index) in tickets">
+                                <template x-if="!freeEvent" class="space-y-5">
+                                    <template x-for="(ticket, index) in tickets" :key="index">
                                         <div class="border border-light-grey/20 rounded-md p-4 space-y-5">
                                             <div class="flex justify-between">
                                                 <h4 x-text="`ticket ${index + 1}`" class="text-orange"></h4>
@@ -198,11 +198,10 @@
                                             
                                         </div>
                                     </template>
-                                    <button @click="tickets.push(tickets.length)" type="button" class="bg-dark-blue text-light-grey text-xs w-full py-2 rounded-lg border border-dashed border-light-grey/20 cursor-pointer hover:bg-orange hover:text-white">
-                                        add ticket
-                                    </button>
-                                </div>
-
+                                </template>    
+                                <button x-show="!freeEvent" @click="tickets.push(tickets.length)" type="button" class="bg-dark-blue text-light-grey text-xs w-full py-2 rounded-lg border border-dashed border-light-grey/20 cursor-pointer hover:bg-orange hover:text-white">
+                                    add ticket
+                                </button>
                                 <div x-show="freeEvent" class="border border-light-grey/20 rounded-md p-4 space-y-5 text-center">
                                     <h3 class="text-green-500 text-3xl mb-0 font-bold">Free event</h3>
                                     <p class="text-light-grey text-sm">Visitors can register for free.</p>
@@ -299,3 +298,4 @@
 
     </x-section.section>
 </x-layout>
+{{dd($errors->all())}}
