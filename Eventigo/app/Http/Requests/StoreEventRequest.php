@@ -87,8 +87,8 @@ class StoreEventRequest extends FormRequest
 
             'max_amount_of_visitors.required_if' => 'The max amount of visitors field is required',
 
-            'image_upload.required_unless'  => 'A cover image is required.',
-            'event_image.required_unless'   => 'A cover image is required.',
+            'image_upload.required_without'  => 'Please upload your own cover image or select a cover image',
+            'event_image.required_without'   => 'Please upload your own cover image or select a cover image',
         ];
     }
 }
