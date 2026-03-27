@@ -57,8 +57,8 @@ class StoreEventRequest extends FormRequest
 
             'max_amount_of_visitors' => ['nullable', 'integer', 'min:1', 'required_if:free_event,true,1,yes,on'],
 
-            'image_upload' => ['nullable', 'image', 'required_unless:action,concept,event_image,null'],
-            'event_image'  => ['nullable', 'string', 'required_unless:action,concept,image_upload,null'],
+            'image_upload' => ['nullable', 'image', Rule::when($this->input('action') !== 'concept', ['required_without:event_image'])],
+            'event_image'  => ['nullable', 'string', Rule::when($this->input('action') !== 'concept', ['required_without:image_upload'])],
         ];
     }
     public function messages(): array
