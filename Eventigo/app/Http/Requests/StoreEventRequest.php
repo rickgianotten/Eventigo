@@ -23,7 +23,7 @@ class StoreEventRequest extends FormRequest
     public function rules(): array
     {
         return[
-
+            'action' => ['string', Rule::in(['concept', 'preview'])],
             'title'             => ['required_unless:action,concept', 'nullable', 'string', 'max:255'],
             'category'          => ['required_unless:action,concept', 'nullable', Rule::exists('categories', 'slug')],
 
