@@ -288,7 +288,7 @@
                         <button @click="step += 1" style="background: var(--gradient-button)" :class="step == 5  ? 'hidden' : 'flex items-center gap-2 rounded-md text-white px-3 py-1 cursor-pointer hover:opacity-75'">
                             next <x-icons.arrow-right/>
                         </button>
-                        <button type="submit" form="createEventForm" style="background: var(--gradient-button)" :class="step == 5 ? 'flex items-center gap-2 rounded-md text-white px-3 py-1 cursor-pointer hover:opacity-75' : 'hidden'">
+                        <button type="submit" name="action" value="preview" form="createEventForm" style="background: var(--gradient-button)" :class="step == 5 ? 'flex items-center gap-2 rounded-md text-white px-3 py-1 cursor-pointer hover:opacity-75' : 'hidden'">
                             preview
                         </button>
                     </div>
