@@ -37,7 +37,7 @@ class StoreEventRequest extends FormRequest
             'end_date' => ['required', 'date', 'after:start_date'],
 
             'start_time' => ['required', 'date_format:H:i'],
-            'end_time' => ['required', 'date_format:H:i', 'after:start_time'],
+            'end_time' => ['required', 'date_format:H:i'],
 
             'participants' => ['required', 'array', 'min:1'],
             'participants.*' => ['required', 'array:name,email,role'],
