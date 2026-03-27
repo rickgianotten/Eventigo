@@ -37,7 +37,8 @@
                     </button>
                 </div>
 
-                <x-form.form id="createEventForm" method="POST" action="{{route('events.create.preview')}}">
+                <form id="createEventForm" method="POST" action="{{route('events.create.storePreview')}}" enctype="multipart/form-data">
+                    @csrf
                     <div x-show="step == 1 ">
                         <x-cards.card>
                             <div class="p-4 space-y-6">
@@ -52,11 +53,12 @@
                                     <h3 class="text-white mb-2">Category</h3>
                                     <div class="flex flex-wrap gap-4 ">
                                         @foreach ($categories as $category)
-                                            <x-form.radio-button :value="$category->name" :id="$category->name" name="category" :required="false">
+                                            <x-form.radio-button :value="$category->slug" :id="$category->name" name="category" :required="false">
                                                 {{$category->name}}
                                             </x-form.radio-button>
                                         @endforeach
                                     </div>
+                                    <x-form.error name="category"/>
                                 </div>
 
                                 <x-form.form-group type="text" name="short_description" placeholder="Max. 120 characters - shown in overview" label="Short description" :required="false"/>
@@ -106,7 +108,7 @@
                                     <p class="text-light-grey text-sm">Add participants, speakers, or artists to your event. </p>
                                 </div>
                                 <div x-data="{participants: [1]}" class="space-y-5">
-                                    <template x-for="(participan, index) in participants">
+                                    <template x-for="(participant, index) in participants">
                                         <div class="border border-light-grey/20 rounded-md p-4 space-y-5">
                                             <div class="flex justify-between">
                                                 <h4 x-text="`participant ${index + 1}`" class="text-orange"></h4>
@@ -130,7 +132,7 @@
                                                     <select :name="'participants['+index+'][role]'" class="text-white bg-light-grey/10 rounded-lg py-1.5 px-2 w-full border border-light-grey/20 focus:ring-0 focus:outline-none">
                                                         <option value="artist">Artist</option>
                                                         <option value="speaker">Speaker</option>
-                                                        <option value="Exhibitor">Exhibitor</option>
+                                                        <option value="exhibitor">Exhibitor</option>
                                                         <option value="vendor">Vendor</option>
                                                     </select>
                                                 </div>
@@ -222,6 +224,7 @@
                                 <div>
                                     <div class="mb-5">
                                         <p class="text-sm text-white mb-2">Upload your own cover image</p>
+                                        <x-form.error name="image_upload"/>
 
                                         <div id="upload_image_container">
                                             <div class="mt-2 flex justify-center rounded-lg border border-dashed border-light-grey/50 px-6 py-15">
@@ -236,7 +239,7 @@
                                                         </label>
                                                         <p class="pl-1">or drag and drop</p>
                                                     </div>
-                                                    <p class="text-xs/5 text-gray-500">PNG, JPG, WEBP</p>
+                                                    <p class="text-xs/5 text-gray-500 uppercase">jpg, jpeg, png, bmp, gif or webp</p>
                                                 </div>
                                             </div>                                           
                                         </div>
@@ -251,10 +254,11 @@
 
                                     <div>
                                         <p class="text-sm text-white mb-2">Or Select a cover image </p>
+                                        <x-form.error name="event_image"/>
                                         <div class="grid grid-cols-2 md:grid-cols-3 gap-5">
                                             @foreach ($eventImages as $image)
                                                 <label for="{{$image['eventType']}}" class="cursor-pointer group/eventImage">
-                                                <input type="radio" id="{{$image['eventType']}}" name="event_image" value="{{$image['eventFilePath']}}" class="hidden peer" :required="false">
+                                                <input type="radio" id="{{$image['eventType']}}" name="event_image" value="{{$image['eventFile']}}" @checked(old('event_image') == $image['eventFile'] ) class="hidden peer" :required="false">
                                                 <div class="rounded-lg border border-light-grey/20 w-full h-full peer-checked:border-orange hover:border-orange relative">
                                                     <img src="{{asset($image['eventFilePath'])}}" alt="{{$image['eventType']}}" class="w-full h-full rounded-[inherit] ">
                                                     <div class="absolute inset-0 bg-black/55 rounded-[inherit] hidden group-hover/eventImage:block"></div>
@@ -269,7 +273,7 @@
                         </x-cards.card>
                     </div>
 
-                </x-form.form>
+                </form>
 
                 <div class="flex justify-between">
                     <button @click="step -= 1" class="" :class="step <= 1  ? 'hidden' : 'flex items-center gap-2 rounded-md text-light-grey/80 text-sm cursor-pointer hover:opacity-75' ">
@@ -278,7 +282,7 @@
 
                     <div class="flex gap-4 ml-auto">
                         @can('saveAsConcept', Event::class)
-                            <button class="border border-light-grey/20 rounded-md text-light-grey px-3 py-1 cursor-pointer hover:opacity-75 hover:border-orange">
+                            <button type="submit" name="action" value="concept" form="createEventForm" class="border border-light-grey/20 rounded-md text-light-grey px-3 py-1 cursor-pointer hover:opacity-75 hover:border-orange">
                                 save as concept
                             </button>
                         @endcan
