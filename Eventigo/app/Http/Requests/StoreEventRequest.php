@@ -57,7 +57,7 @@ class StoreEventRequest extends FormRequest
             'max_amount_of_visitors' => ['nullable', 'integer', 'min:1'],
 
             'image_upload' => ['nullable', 'image', 'required_without:event_image'],
-            'event_image' => ['nullable', 'image', 'required_without:image_upload'],
+            'event_image' => ['nullable', 'string', 'required_without:image_upload'],
         ];
     }
 }
