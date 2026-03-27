@@ -54,7 +54,7 @@ class StoreEventRequest extends FormRequest
 
             'free_event' => ['nullable', 'accepted'],
 
-            'max_amount_of_visitors' => ['nullable', 'integer', 'min:1'],
+            'max_amount_of_visitors' => ['nullable', 'integer', 'min:1', 'required_if:free_event,true,1,yes,on'],
 
             'image_upload' => ['nullable', 'image', 'required_without:event_image'],
             'event_image' => ['nullable', 'string', 'required_without:image_upload'],
