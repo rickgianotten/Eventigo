@@ -45,7 +45,7 @@ class StoreEventRequest extends FormRequest
             'participants.*.email' => ['required', 'email', 'max:255'],
             'participants.*.role' => ['required', Rule::in(['artist','speaker','exhibitor','vendor' ])],
 
-            'tickets' => ['nullable', 'array'],
+            'tickets' => ['required_unless:free_event,true,1,yes,on', 'array', 'min:1'],
             'tickets.*' => ['required', 'array:type,price,quantity,description'],
             'tickets.*.type' => ['required', Rule::in(['Regular','VIP'])],
             'tickets.*.price' => ['required', 'decimal:2', 'min:0'],
