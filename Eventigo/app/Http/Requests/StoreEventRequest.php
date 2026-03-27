@@ -52,7 +52,7 @@ class StoreEventRequest extends FormRequest
             'tickets.*.quantity' => ['required', 'integer', 'min:1'],
             'tickets.*.description' => ['nullable', 'string', 'max:120'],
 
-            'free_event' => ['nullable', 'accepted'],
+            'free_event' => ['nullable'],
 
             'max_amount_of_visitors' => ['nullable', 'integer', 'min:1', 'required_if:free_event,true,1,yes,on'],
 
