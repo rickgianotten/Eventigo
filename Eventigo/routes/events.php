@@ -10,4 +10,5 @@ Route::get('/create', [EventController::class, 'create'])->can('create', Event::
 
 Route::get('/{event:slug}', [EventController::class, 'show'])->name('show');
 
+Route::get('/create/preview', [EventController::class, 'showPreview'])->can('create', Event::class)->name('create.showPreview');
 Route::post('/create/preview', [EventController::class, 'storePreview'])->can('create', Event::class)->name('create.storePreview');

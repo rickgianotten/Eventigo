@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Event;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreEventRequest;
 use App\Models\Category;
 use App\Models\Event;
 use Illuminate\Http\Request;
@@ -72,6 +73,7 @@ class EventController extends Controller
 
             return collect($eventFiles)->map(function ($file) {
                 return [
+                    'eventFile' => $file->getFilename(),
                     'eventFilePath' => 'images/events/defaults/' . $file->getFilename(),
                     'eventType' => pathinfo($file->getFilename(), PATHINFO_FILENAME). ' event'
                     ];
@@ -81,8 +83,20 @@ class EventController extends Controller
         return view('events.create', ['categories' => $categories, 'eventImages' => $eventImages]);
     }
 
-    public function preview(Request $request){
-        $eventData = $request->all();
-        return $eventData;
+    public function storePreview(StoreEventRequest $request){
+        $validatedValues = $request->validated();
+        if($validatedValues['action'] == 'concept'){ ///
+            return dd('save as concept');
+        }
+
+        $request->session()->put('eventData', $validatedValues);
+        
+       return redirect()->route('events.create.showPreview');
+    }
+    
+    public function showPreview(Request $request){
+        $eventData = $request->session()->get('eventData');
+
+        return view('events.preview', ['eventData' => $eventData ]);
     }
 }
