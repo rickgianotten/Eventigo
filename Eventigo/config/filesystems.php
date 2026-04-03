@@ -33,7 +33,7 @@ return [
         'events' =>[
             'driver' => 'local',
             'root' => storage_path('app/public/events/uploads'),
-            'url' => env('APP_URL', 'http://localhost').'/images/events',
+            'url' => env('APP_URL', 'http://localhost').'/storage/events/uploads',
             'visibility' => 'public'
         ],
 
