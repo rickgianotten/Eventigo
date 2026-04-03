@@ -1,7 +1,7 @@
 @props(['value', 'name', 'selected' => false, 'id', 'required'=> true])
 
 @php
-    $current = old($name, request($name, $selected ? $value : null));
+    $current = old($name, request($name,  session("eventData.$name", $selected ? $value : null)));
 @endphp
 
 <label for="{{$id}}" class="cursor-pointer">

@@ -112,7 +112,6 @@
                     </div>                     
                 </div>
             </x-cards.card>   
-            
             <x-form.form class="flex justify-end gap-3 mt-5" method="POST">
                 @can('saveAsConcept', Event::class)
                     <button type="submit" name="action" value="concept" class="border border-light-grey/20 rounded-md text-light-grey p-2 cursor-pointer hover:opacity-75 hover:border-orange">
