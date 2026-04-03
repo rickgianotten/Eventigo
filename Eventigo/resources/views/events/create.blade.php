@@ -257,7 +257,7 @@
                                         <div class="grid grid-cols-2 md:grid-cols-3 gap-5">
                                             @foreach ($eventImages as $image)
                                                 <label for="{{$image['eventType']}}" class="cursor-pointer group/eventImage">
-                                                <input type="radio" id="{{$image['eventType']}}" name="event_image" value="{{$image['eventFile']}}" @checked(old('event_image') == $image['eventFile'] ) class="hidden peer" :required="false">
+                                                <input type="radio" id="{{$image['eventType']}}" name="event_image" value="{{$image['eventFilePath']}}" @checked(old('event_image') == $image['eventFile'] ) class="hidden peer" :required="false">
                                                 <div class="rounded-lg border border-light-grey/20 w-full h-full peer-checked:border-orange hover:border-orange relative">
                                                     <img src="{{asset($image['eventFilePath'])}}" alt="{{$image['eventType']}}" class="w-full h-full rounded-[inherit] ">
                                                     <div class="absolute inset-0 bg-black/55 rounded-[inherit] hidden group-hover/eventImage:block"></div>
