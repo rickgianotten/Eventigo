@@ -35,7 +35,7 @@ class StoreEventRequest extends FormRequest
             'street'            => ['required_unless:action,concept', 'nullable', 'string'],
 
             'start_date'        => ['required_unless:action,concept', 'nullable', 'date', 'after_or_equal:today'],
-            'end_date'          => ['required_unless:action,concept', 'nullable', 'date', 'after:start_date'],
+            'end_date'          => ['required_unless:action,concept', 'nullable', 'date', 'after_or_equal:start_date'],
 
             'start_time'        => ['required_unless:action,concept', 'nullable', 'date_format:H:i'],
             'end_time'          => ['required_unless:action,concept', 'nullable', 'date_format:H:i'],
