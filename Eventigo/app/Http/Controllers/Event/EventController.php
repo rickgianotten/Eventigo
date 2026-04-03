@@ -9,7 +9,6 @@ use App\Models\Event;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
 class EventController extends Controller
@@ -85,12 +84,17 @@ class EventController extends Controller
 
     public function storePreview(StoreEventRequest $request){
         $validatedValues = $request->validated();
-        if($validatedValues['action'] == 'concept'){ ///
+
+        if($validatedValues['action'] == 'concept'){
             return dd('save as concept');
         }
 
+        if(array_key_exists('image_upload', $validatedValues)){
+            $path = $request->file('image_upload')->store('', 'events');
+            $validatedValues['image_upload'] = $path;
+        };
+
         $request->session()->put('eventData', $validatedValues);
-        
        return redirect()->route('events.create.showPreview');
     }
     
