@@ -6,8 +6,10 @@
 <x-layout>
     <x-section.section>
         <div class=" max-w-4xl mx-auto mt-10">
-            <h2 class="text-white text-3xl font-bold">Event Overview</h2>
-            <p class="text-light-grey">Review your event before publishing it.</p>
+            <x-section.section-heading>
+                <x-slot:heading>Event Overview</x-slot:heading>
+                <x-slot:text>Review your event before publishing it.</x-slot:text>
+            </x-section.section-heading>
             <x-cards.card class="my-5">
                 <div>
                     @if(isset($eventData['image_upload']))
@@ -111,17 +113,23 @@
                         </x-cards.card>       
                     </div>                     
                 </div>
-            </x-cards.card>   
-            <x-form.form class="flex justify-end gap-3 mt-5" method="POST">
-                @can('saveAsConcept', Event::class)
-                    <button type="submit" name="action" value="concept" class="border border-light-grey/20 rounded-md text-light-grey p-2 cursor-pointer hover:opacity-75 hover:border-orange">
-                        save as concept
-                    </button>
-                @endcan
-                <x-form.button name="action" value="store" class="gap-1">
-                    <span class="material-symbols-outlined text-white">star_shine</span>Publish your event
-                </x-form.button>
-            </x-form.form>
+            </x-cards.card>
+
+            <div class="flex justify-between items-center mt-5">
+                <a href="{{route('events.create')}}" class="text-light-grey flex items-center gap-2 cursor-pointer hover:text-orange"><x-icons.arrow-left/>Edit Event</a>
+
+                <x-form.form class="flex gap-3 " method="POST">
+                    @can('saveAsConcept', Event::class)
+                        <button type="submit" name="action" value="concept" class="border border-light-grey/20 rounded-md text-light-grey p-2 cursor-pointer hover:opacity-75 hover:border-orange">
+                            save as concept
+                        </button>
+                    @endcan
+                    <x-form.button name="action" value="store" class="gap-1">
+                        <span class="material-symbols-outlined text-white">star_shine</span>Publish your event
+                    </x-form.button>
+                </x-form.form> 
+
+            </div>   
         </div>
     </x-section.section>
 </x-layout>
