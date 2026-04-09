@@ -16,7 +16,7 @@ class Event extends Model
         'title', 
         'description', 
         'start_time',
-        'end_time',
+        'end_time',       
         'location',
         'city',
         'street',
@@ -51,7 +51,8 @@ class Event extends Model
         return [
             'start_time' => 'datetime',
             'end_time' => 'datetime',
-            'time' => 'datetime'
+            'start_date' => 'date',
+            'end_date' => 'date',
         ];
     }
 
