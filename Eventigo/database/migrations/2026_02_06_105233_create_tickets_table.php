@@ -15,10 +15,11 @@ return new class extends Migration
         Schema::create('tickets', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Event::class)->constrained()->cascadeOnDelete();
-            $table->enum('type', ['Regular', 'VIP']);
-            $table->decimal('price', 8, 2);
+            $table->enum('type', ['Regular', 'VIP', 'Free']);
+            $table->decimal('price', 8, 2)->nullable();
+            $table->string('description')->nullable();
             $table->unsignedInteger('quantity_available');
-            $table->unsignedInteger('quantity_sold');
+            $table->unsignedInteger('quantity_sold')->default(0);
             $table->timestamps();
         });
     }
