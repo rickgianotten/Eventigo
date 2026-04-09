@@ -19,7 +19,13 @@
             </div>
             <div class="flex justify-between border-t border-light-grey/20 pt-4">
                 <p class="text-light-grey">From</p>
-                <p class="text-white">${{number_format($event->cheapestTicketPrice(), 2, ',', '.')}}</p>
+                <p class="text-white font-bold">
+                    @if($event->isFreeEvent())
+                        Free
+                    @else
+                        ${{number_format($event->cheapestTicketPrice(), 2, ',', '.')}}
+                    @endif
+                </p>
             </div>
         </div>
     </a>
