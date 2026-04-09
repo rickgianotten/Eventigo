@@ -21,10 +21,12 @@ return new class extends Migration
             $table->foreignIdFor(Company::class)->constrained()->cascadeOnDelete();   
             $table->string('title');         
             $table->string('slug')->unique();
-            $table->text('description');
+            $table->text('short_description');
+            $table->text('long_description')->nullable();
+            $table->date('start_date');
+            $table->date('end_date');           
             $table->dateTime('start_time');
             $table->dateTime('end_time');
-            $table->time('time');
             $table->string('location');
             $table->string('city');
             $table->string('street');
