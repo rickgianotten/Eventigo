@@ -38,6 +38,10 @@ class Event extends Model
         return $this->tickets()->min('price');
     }
 
+    public function isFreeEvent():bool{
+        return $this->tickets()->where('type', 'Free')->exists();
+    }
+
     public function company(){
         return $this->belongsTo(Company::class);
     }
