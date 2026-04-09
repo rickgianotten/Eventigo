@@ -16,8 +16,11 @@ class ParticipantFactory extends Factory
      */
     public function definition(): array
     {
+        $roles = ['artist', 'speaker', 'exhibitor', 'vendor'];
         return [
-            'name' => fake()->name()
+            'name' => fake()->name(),
+            'email' => fake()->email(),
+            'role' => fake()->randomElement($roles)
         ];
     }
 }
