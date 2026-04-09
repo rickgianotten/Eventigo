@@ -11,7 +11,7 @@
             <h2 class="text-white text-xl font-bold group-hover:text-orange">{{$event->title}}</h2>
             <div class="flex gap-2">
                 <x-icons.calender-icon class="text-orange"/>
-                <p class="text-light-grey">{{$event->start_time->format('d F Y')}} • {{$event->start_time->format('H:i')}} </p>
+                <p class="text-light-grey">{{$event->start_date->format('d F Y')}} • {{$event->start_time->format('H:i')}} </p>
             </div>
             <div class="flex gap-2">
                 <x-icons.location-icon class="text-orange"/>
