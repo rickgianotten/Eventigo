@@ -30,7 +30,7 @@
                         <div class="p-3">
                             <x-icons.calender-icon class="text-orange"/>
                             <h4 class="text-light-grey text-sm">Date</h4>
-                            <p class="text-white text-sm font-bold">{{$event->start_time->format('d F Y')}}</p>
+                            <p class="text-white text-sm font-bold">{{$event->start_date->format('d F Y')}}</p>
                         </div>
                     </x-cards.card>
 
