@@ -44,22 +44,6 @@ tickets.forEach((ticket) => {
     btnDecrease!.disabled = ticketQuantity <= 0;
   }
 
-  // ticketInput.addEventListener('input',()=>{
-  //   if (ticketQuantity >= maxQuantity) return;
-  //   if (ticketQuantity < maxQuantity) return;
-
-  //   const ticketPrice = getTicketPrice();
-
-  //   ticketQuantity = Number(ticketInput.value);
-
-  //   totalPrice += ticketPrice * ticketQuantity;
-  //   totalAmountOfTickets += ticketQuantity;
-
-  //   updateTotals();
-  //   updateButtons();
-
-  // });
-
   btnIncrease.addEventListener('click', () => {
     if (ticketQuantity >= maxQuantity) return;
 
@@ -84,5 +68,5 @@ tickets.forEach((ticket) => {
     updateButtons();
   });
 
-  updateButtons(); // zet initiële staat van de knoppen
+  updateButtons(); 
 });
