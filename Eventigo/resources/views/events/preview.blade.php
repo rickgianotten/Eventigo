@@ -86,7 +86,7 @@
                                         @foreach ($eventData['tickets'] as $ticket)
                                         <div class="flex justify-between">
                                             <p class="text-white">{{$ticket['type']}}</p>
-                                            <p class="text-light-grey text-sm">${{$ticket['price']}} - {{$ticket['quantity']}} available</p>
+                                            <p class="text-light-grey text-sm">${{$ticket['price']}} - {{$ticket['quantity_available']}} available</p>
                                         </div>
                                         @endforeach                                    
                                     </div>
