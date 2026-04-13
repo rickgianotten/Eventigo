@@ -298,4 +298,3 @@
 
     </x-section.section>
 </x-layout>
-@dd($errors->all())
