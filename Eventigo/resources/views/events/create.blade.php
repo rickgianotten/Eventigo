@@ -187,7 +187,7 @@
                                                                                                 
                                                 <div>
                                                     <label :for="'ticket_quantity_' + index" class="flex items-center text-white font-medium">Quantity available</label>
-                                                    <input :id="'ticket_quantity_' + index" type="number" :name="'tickets['+index+'][quantity]'" placeholder="100" step="1" min="1" class="text-white bg-light-grey/10 rounded-lg py-1.5 px-2 w-full border border-light-grey/20 focus:border-orange focus:ring-0 focus:outline-none">
+                                                    <input :id="'ticket_quantity_' + index" type="number" :name="'tickets['+index+'][quantity_available]'" placeholder="100" step="1" min="1" class="text-white bg-light-grey/10 rounded-lg py-1.5 px-2 w-full border border-light-grey/20 focus:border-orange focus:ring-0 focus:outline-none">
                                                 </div>
                                             </div>
 
@@ -298,3 +298,4 @@
 
     </x-section.section>
 </x-layout>
+@dd($errors->all())
