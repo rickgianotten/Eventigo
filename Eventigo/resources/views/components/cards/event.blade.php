@@ -2,7 +2,7 @@
 
 <x-cards.card :hover="true">
     <a href="{{route('events.show', $event->slug)}}">
-        <div style="background-image: url('https://content.jdmagicbox.com/comp/ernakulam/m4/0484px484.x484.140206113128.a9m4/catalogue/we-create-events-panampilly-nagar-ernakulam-event-management-companies-nsobpzm660.jpg');" class="bg-cover bg-center w-full h-90 rounded-t-lg relative">
+        <div style="background-image: url({{$event->getEventImage()}});" class="bg-cover bg-center w-full h-90 rounded-t-lg relative">
             <div class="absolute left-2 top-1">
                 <x-tag>{{$event->category->name}}</x-tag>
             </div>
