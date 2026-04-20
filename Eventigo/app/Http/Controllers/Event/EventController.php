@@ -94,13 +94,15 @@ class EventController extends Controller
 
         $user = Auth::user();
 
-        if($user->company){
-            $company = $user->company;
-        }
+        $company = $user->company ?? $user->ownedCompany;
 
-        if($user->ownedCompany){
-            $company = $user->ownedCompany;
-        }
+        // if($user->company){
+        //     $company = $user->company;
+        // }
+
+        // if($user->ownedCompany){
+        //     $company = $user->ownedCompany;
+        // }
 
         $eventData = $request->session()->pull('eventData');
 
