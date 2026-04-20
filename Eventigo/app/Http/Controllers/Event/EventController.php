@@ -96,14 +96,6 @@ class EventController extends Controller
 
         $company = $user->company ?? $user->ownedCompany;
 
-        // if($user->company){
-        //     $company = $user->company;
-        // }
-
-        // if($user->ownedCompany){
-        //     $company = $user->ownedCompany;
-        // }
-
         $eventData = $request->session()->pull('eventData');
 
         $event = Arr::except($eventData, ['tickets', 'participants', 'category']);
