@@ -13,13 +13,18 @@ class Event extends Model
     /** @use HasFactory<\Database\Factories\EventsFactory> */
     use HasFactory;
     public $fillable = [
-        'title', 
-        'description', 
+        'title',
+        'slug', 
+        'category_id',
+        'short_description',
+        'long_description',  
+        'start_date',
+        'end_date',
         'start_time',
-        'end_time',       
+        'end_time',        
         'location',
         'city',
-        'street',
+        'street', 
         'postal_code',
         'image_path'];
 
