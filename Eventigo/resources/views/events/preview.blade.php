@@ -12,8 +12,8 @@
             </x-section.section-heading>
             <x-cards.card class="my-5">
                 <div>
-                    @if(isset($eventData['image_upload']))
-                        <img src="{{Storage::disk('events')->url($eventData['image_upload'])}}" alt="{{$eventData['title']}}" class="rounded-lg object-cover aspect-[21/9]">
+                    @if($eventData['image_from_upload'])
+                        <img src="{{Storage::disk('events')->url($eventData['image_path'])}}" alt="{{$eventData['title']}}" class="rounded-lg object-cover aspect-[21/9]">
                     @else
                         <img src="{{asset($eventData['event_image'])}}" alt="{{$eventData['title']}}" class="rounded-lg object-cover aspect-[21/9]" >
                     @endif
@@ -118,7 +118,7 @@
             <div class="flex justify-between items-center mt-5">
                 <a href="{{route('events.create')}}" class="text-light-grey flex items-center gap-2 cursor-pointer hover:text-orange"><x-icons.arrow-left/>Edit Event</a>
 
-                <x-form.form class="flex gap-3 " method="POST">
+                <x-form.form class="flex gap-3 " method="POST" action="{{route('events.store')}}">
                     @can('saveAsConcept', Event::class)
                         <button type="submit" name="action" value="concept" class="border border-light-grey/20 rounded-md text-light-grey p-2 cursor-pointer hover:opacity-75 hover:border-orange">
                             save as concept
