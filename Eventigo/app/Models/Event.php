@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Storage;
 
 class Event extends Model
 {
@@ -39,6 +40,14 @@ class Event extends Model
         return $this->hasMany(Ticket::class);
     }
 
+    public function company(){
+        return $this->belongsTo(Company::class);
+    }
+
+    public function participants():BelongsToMany{
+        return $this->belongsToMany(Participant::class);
+    }
+
     public function cheapestTicketPrice():?float{
         return $this->tickets()->min('price');
     }
@@ -47,12 +56,14 @@ class Event extends Model
         return $this->tickets()->where('type', 'Free')->exists();
     }
 
-    public function company(){
-        return $this->belongsTo(Company::class);
-    }
-
-    public function participants():BelongsToMany{
-        return $this->belongsToMany(Participant::class);
+    public function getEventImage(){
+        /** @var \Illuminate\Filesystem\FilesystemAdapter $disk */
+        $disk = Storage::disk('events');
+        
+        if($disk->exists($this->image_path)){
+            return $disk->url($this->image_path);
+        }
+        return asset($this->image_path);
     }
 
     protected function casts():array
