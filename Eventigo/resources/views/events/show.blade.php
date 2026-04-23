@@ -1,5 +1,5 @@
 <x-layout>
-    <section class="bg-cover bg-center h-[50vh] relative px-4 mb-10" style="background-image: url('{{ asset('images/hero.jpeg') }}')">
+    <section class="bg-cover bg-center h-[50vh] relative px-4 mb-10" style="background-image: url('{{ $event->getEventImage() }}')">
             {{-- overlay --}}
             <div class="absolute inset-0 bg-black/55"></div>
 
