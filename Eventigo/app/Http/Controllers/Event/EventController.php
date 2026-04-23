@@ -149,6 +149,7 @@ class EventController extends Controller
             unset($validatedValues['image_upload']);
         }else{
             $validatedValues['image_path'] = $validatedValues['event_image'];
+            $validatedValues['image_from_upload'] = false;
         };
 
         $request->session()->put('eventData', $validatedValues);
