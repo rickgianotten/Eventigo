@@ -37,7 +37,7 @@ beforeEach(function(){
             ]
         ],
 
-        'event_image' => 'images/events/defaults/art.jpg'//required to pass validation or image_upload
+        'event_image' => 'images/events/defaults/art.jpg' //required to pass validation or image_upload
     ];
 });
 
@@ -59,4 +59,17 @@ test('can store preview in the session of an event with tickets', function(){
     $response = $this->actingAs($this->user)->post(route('events.create.storePreview'), $event);
 
     $response->assertRedirectToRoute('events.create.showPreview')->assertSessionHas('eventData.tickets', $tickets);
+});
+
+test('can store preview in the session of a free event', function(){
+    $event = $this->startEventData;
+
+    $event['free_event'] = 'on';
+    $event['max_amount_of_visitors'] = '120';
+
+    $this->actingAs($this->user)->post(route('events.create.storePreview'), $event)->assertRedirectToRoute('events.create.showPreview');
+
+    expect(session('eventData.free_event'))->toBe('on');
+    expect(session('eventData.max_amount_of_visitors'))->toBe('120');
+             
 });
