@@ -1,11 +1,12 @@
 <?php
 
 use App\Models\Company;
-use App\Models\Ticket;
 use App\Models\User;
 use Database\Seeders\CategorySeeder;
 use Database\Seeders\PricingPlanSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 pest()->use(RefreshDatabase::class);
 
@@ -72,4 +73,42 @@ test('can store preview in the session of a free event', function(){
     expect(session('eventData.free_event'))->toBe('on');
     expect(session('eventData.max_amount_of_visitors'))->toBe('120');
              
+});
+
+test('can store preview in the session with default image', function(){
+    $event = $this->startEventData;
+
+    // making it free only for passing validation
+    $event['free_event'] = 'on';
+    $event['max_amount_of_visitors'] = '120';
+
+    $this->actingAs($this->user)->post(route('events.create.storePreview'), $event)->assertRedirectToRoute('events.create.showPreview');
+
+    expect(session('eventData'))
+    ->toHaveKey('image_path', $this->startEventData['event_image'])
+    ->toHaveKey('image_from_upload', false)
+    ->not->toHaveKey('image_upload');
+});
+
+test('can store preview in the session with uploaded image', function(){
+    $event = $this->startEventData;
+
+    // making it free only for passing validation
+    $event['free_event'] = 'on';
+    $event['max_amount_of_visitors'] = '120';
+
+    Storage::fake('events');
+
+    $uploadedImage = UploadedFile::fake()->image('events_image.jpg');
+
+    $event['image_upload'] = $uploadedImage;
+
+    $this->actingAs($this->user)->post(route('events.create.storePreview'), $event)->assertRedirectToRoute('events.create.showPreview');
+
+    expect(session('eventData'))
+        ->toHaveKey('image_from_upload', true)
+        ->toHaveKey('image_path', $uploadedImage->hashName())
+        ->not->toHaveKey('image_upload');
+    
+    Storage::disk('events')->assertExists($uploadedImage->hashName());
 });
