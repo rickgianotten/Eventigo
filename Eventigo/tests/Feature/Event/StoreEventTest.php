@@ -3,6 +3,7 @@
 use App\Models\Category;
 use App\Models\Company;
 use App\Models\Event;
+use App\Models\Participant;
 use App\Models\User;
 use Database\Seeders\CategorySeeder;
 use Database\Seeders\PricingPlanSeeder;
@@ -35,6 +36,11 @@ beforeEach(function(){
             'name' => 'test participant',
             'email' => 'test.participant@gmail.com',
             'role' => 'artist'
+            ],
+            [
+            'name' => 'test participant 1',
+            'email' => 'test.participant1@gmail.com',
+            'role' => 'speaker'
             ]
         ],
         
@@ -120,4 +126,38 @@ test('can store event thats free',function(){
         'quantity_available' => $this->startEventData['max_amount_of_visitors']
     ]);
 });
+
+test('can store participants', function(){
+    $eventSlug = Str::slug($this->startEventData['title']);
+
+    $this->actingAs($this->user)->withSession(['eventData' => $this->startEventData])->post(route('events.store'))->assertRedirect(route('events.show',$eventSlug));
+
+    foreach($this->startEventData['participants'] as $participant){
+        assertDatabaseHas('participants',[
+            'name' => $participant['name'],
+            'email' => $participant['email'],
+            'role' => $participant['role'],
+        ]);
+    }
+});
+
+test('can link event to participants', function(){
+    $eventSlug = Str::slug($this->startEventData['title']);
+
+    $this->actingAs($this->user)->withSession(['eventData' => $this->startEventData])->post(route('events.store'))->assertRedirect(route('events.show',$eventSlug));
+
+    $event = Event::where('slug', $eventSlug)->firstOrFail();
+
+    $participants = $event->participants;
+
+    foreach($participants as $participant){
+        assertDatabaseHas('event_participant', [
+        'event_id' => $event->id,
+        'participant_id' => $participant->id
+    ]);
+    }
+
+});
+
+
 
