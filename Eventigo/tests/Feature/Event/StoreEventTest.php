@@ -14,8 +14,8 @@ pest()->use(RefreshDatabase::class);
 
 beforeEach(function(){
     $this->seed([PricingPlanSeeder::class, CategorySeeder::class]);
-    $company = Company::factory()->create(['pricing_plan_id' => '2']);
-    $this->user = User::find($company->user_id);
+    $this->company = Company::factory()->create(['pricing_plan_id' => '2']);
+    $this->user = User::find($this->company->user_id);
     $this->startEventData = [
         'action' => 'store',
         'title' => 'test event',
@@ -159,5 +159,13 @@ test('can link event to participants', function(){
 
 });
 
+test('can link event to company', function(){
+    $eventSlug = Str::slug($this->startEventData['title']);
 
+    $this->actingAs($this->user)->withSession(['eventData' => $this->startEventData])->post(route('events.store'))->assertRedirect(route('events.show',$eventSlug));
+
+    $event = Event::where('slug', $eventSlug)->firstOrFail();
+
+    expect($event->company_id)->toBe($this->company->id);
+});
 
