@@ -6,10 +6,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [EventController::class, 'index'])->name('index');
 
-Route::get('/create', [EventController::class, 'create'])->can('create', Event::class)->name('create');
-Route::post('/create', [EventController::class, 'store'])->can('create', Event::class)->name('store');
+Route::can('create', Event::class)->group(function(){
+    Route::get('/create', [EventController::class, 'create'])->name('create');
+    Route::post('/create', [EventController::class, 'store'])->name('store');
+
+    Route::get('/create/preview', [EventController::class, 'showPreview'])->name('create.showPreview');
+    Route::post('/create/preview', [EventController::class, 'storePreview'])->name('create.storePreview');
+});
 
 Route::get('/{event:slug}', [EventController::class, 'show'])->name('show');
-
-Route::get('/create/preview', [EventController::class, 'showPreview'])->can('create', Event::class)->name('create.showPreview');
-Route::post('/create/preview', [EventController::class, 'storePreview'])->can('create', Event::class)->name('create.storePreview');
