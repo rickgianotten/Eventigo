@@ -14,6 +14,7 @@ class Event extends Model
     /** @use HasFactory<\Database\Factories\EventsFactory> */
     use HasFactory;
     public $fillable = [
+        'status',
         'title',
         'slug', 
         'category_id',
