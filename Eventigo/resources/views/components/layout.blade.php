@@ -1,3 +1,7 @@
+@php
+    use App\Models\Event;
+@endphp
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,7 +32,9 @@
 
                 @auth
                     <div class="flex items-center gap-4">
-                        <x-nav-button href="{{route('events.create')}}" class="border-none gap-2" style="background: var(--gradient-button)"> <span>+</span>create event</x-nav-button>        
+                        @can('create', Event::class)
+                            <x-nav-button href="{{route('events.create')}}" class="border-none gap-2" style="background: var(--gradient-button)"> <span>+</span>create event</x-nav-button>                                
+                        @endcan
                         <form action={{route('auth.logout')}} method="POST" class="grid">
                             @csrf
                             @method('DELETE')
@@ -71,7 +77,9 @@
                     
                     @auth
                         <div class="grid  gap-4">
-                           <x-nav-button href="{{route('events.create')}}" class="border-none gap-2" style="background: var(--gradient-button)"> <span>+</span>create event</x-nav-button>        
+                            @can('create', Event::class)
+                                <x-nav-button href="{{route('events.create')}}" class="border-none gap-2" style="background: var(--gradient-button)"> <span>+</span>create event</x-nav-button>                                
+                            @endcan
                             <form action={{route('auth.logout')}} method="POST" class="grid">
                                 @csrf
                                 @method('DELETE')
