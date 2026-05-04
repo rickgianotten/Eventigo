@@ -1,5 +1,5 @@
 <x-layout>
-    <section class="bg-cover bg-center h-[50vh] relative px-4 mb-10" style="background-image: url('{{ asset('images/hero.jpeg') }}')">
+    <section class="bg-cover bg-center h-[50vh] relative px-4 mb-10" style="background-image: url('{{ $event->getEventImage() }}')">
             {{-- overlay --}}
             <div class="absolute inset-0 bg-black/55"></div>
 
@@ -30,7 +30,7 @@
                         <div class="p-3">
                             <x-icons.calender-icon class="text-orange"/>
                             <h4 class="text-light-grey text-sm">Date</h4>
-                            <p class="text-white text-sm font-bold">{{$event->start_time->format('d F Y')}}</p>
+                            <p class="text-white text-sm font-bold">{{$event->start_date->format('d F Y')}}</p>
                         </div>
                     </x-cards.card>
 
@@ -131,12 +131,20 @@
                                 @foreach ($event->tickets as $ticket)
                                 <div class="ticket">
                                     <x-cards.card>
-                                        <div class="p-3 space-y-4">
+                                        <div class="p-3 space-y-2">
                                             <div class="flex">
                                                 <h3 class="text-white font-bold flex-grow">{{$ticket->type}}</h3>
-                                                <p class="text-white font-bold">$ <span class="ticket_price">{{number_format($ticket->price, 2, ',', '.')}}</span></p>
+                                                <p class="text-white font-bold">
+                                                    @if($ticket->type == "Free")
+                                                        <span class="ticket_price">Free</span>
+                                                    @else
+                                                        $ <span class="ticket_price">{{number_format($ticket->price, 2, ',', '.')}}</span>                                                       
+                                                    @endif   
+                                                </p>
                                             </div>
-
+                                            <div>
+                                                <p class="text-light-grey text-xs">{{$ticket->description}}</p>
+                                            </div>
                                             <div class="flex items-center">
                                                 @if($ticket->quantity_available - $ticket->quantity_sold >= 12 )
                                                     <p class="text-light-grey text-xs flex-grow"> <span class="max_quantity_of_tickets">{{$ticket->quantity_available -$ticket->quantity_sold}}</span> tickets available</p>

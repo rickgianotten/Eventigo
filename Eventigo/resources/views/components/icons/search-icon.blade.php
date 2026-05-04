@@ -1,1 +1,1 @@
-<span {{$attributes->merge(['class' => "material-symbols-outlined text-white"])}}>search</span>
+<span {{$attributes->merge(['class' => "material-symbols-outlined text-light-grey"])}}>search</span>

@@ -18,6 +18,6 @@
     @if ($required)
         required
     @endif
-    >{{old($name)}}</textarea>
+    >{{old($name, session("eventData.$name"))}}</textarea>
     <x-form.error :name="$name"/>
 </div>

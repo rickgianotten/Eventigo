@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers\Event;
 
+use App\Actions\Event\StoreEvent;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreEventRequest;
 use App\Models\Category;
 use App\Models\Event;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
 class EventController extends Controller
@@ -72,6 +74,7 @@ class EventController extends Controller
 
             return collect($eventFiles)->map(function ($file) {
                 return [
+                    'eventFile' => $file->getFilename(),
                     'eventFilePath' => 'images/events/defaults/' . $file->getFilename(),
                     'eventType' => pathinfo($file->getFilename(), PATHINFO_FILENAME). ' event'
                     ];
@@ -79,5 +82,41 @@ class EventController extends Controller
         });
 
         return view('events.create', ['categories' => $categories, 'eventImages' => $eventImages]);
+    }
+
+    public function store(Request $request, StoreEvent $action){
+        $eventData = $request->session()->pull('eventData');
+        $user = Auth::user();
+
+        $event = $action->handle($user, $eventData);
+
+        return redirect()->route('events.show', $event->slug);
+    }
+
+    public function storePreview(StoreEventRequest $request){
+        $validatedValues = $request->validated();
+        
+        if($validatedValues['action'] == 'concept'){
+            return dd($validatedValues);
+        }
+
+        if(array_key_exists('image_upload', $validatedValues)){
+            $path = $request->file('image_upload')->store('', 'events');
+            $validatedValues['image_path'] = $path;
+            $validatedValues['image_from_upload'] = true;
+            unset($validatedValues['image_upload']);
+        }else{
+            $validatedValues['image_path'] = $validatedValues['event_image'];
+            $validatedValues['image_from_upload'] = false;
+        };
+
+        $request->session()->put('eventData', $validatedValues);
+       return redirect()->route('events.create.showPreview');
+    }
+    
+    public function showPreview(Request $request){
+        $eventData = $request->session()->get('eventData');
+
+        return view('events.preview', ['eventData' => $eventData ]);
     }
 }

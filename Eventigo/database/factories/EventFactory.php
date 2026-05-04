@@ -24,10 +24,16 @@ class EventFactory extends Factory
         return [
             'title'=> $title,
             'slug' => Str::slug($title),
-            'description' => fake()->sentence(),
+
+            'short_description' => fake()->sentence(),
+            'long_description' => fake()->sentence(),
+
+            'start_date' => fake()->date(),
+            'end_date' => fake()->date(),
+
             'start_time' => fake()->dateTime(),
             'end_time' => fake()->dateTime(),
-            'time' => fake()->time(),
+
             'location' => fake()->country(),
             'city' => fake()->city(),
             'street' => fake()->streetAddress(),

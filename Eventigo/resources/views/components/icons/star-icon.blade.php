@@ -1,1 +1,1 @@
-<span class="material-icons text-orange">star</span>
+<span {{$attributes->merge(['class' => "material-icons text-orange"])}}>star</span>

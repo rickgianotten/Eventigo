@@ -17,13 +17,15 @@ class TicketFactory extends Factory
      */
     public function definition(): array
     {
+        $type = fake()->randomElement(['Regular', 'VIP', 'Free']);
         $quantity_available = fake()->numberBetween(0, 500);
 
         return [
-            'type' => fake()->randomElement(['Regular', 'VIP']),
-            'price' => fake()->randomFloat(2),
+            'type' => $type,
+            'price' => $type === 'Free' ? null : fake()->randomFloat(2),
+            'description' => fake()->optional()->text(100),
             'quantity_available' => $quantity_available,
-            'quantity_sold' => fake()->numberBetween(0,$quantity_available),
+            'quantity_sold' => fake()->numberBetween(0, $quantity_available),
         ];
     }
 }
