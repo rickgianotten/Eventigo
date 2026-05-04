@@ -2,18 +2,15 @@
 
 namespace App\Http\Controllers\Event;
 
+use App\Actions\Event\StoreEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreEventRequest;
 use App\Models\Category;
 use App\Models\Event;
-use App\Models\Participant;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
 class EventController extends Controller
@@ -87,52 +84,13 @@ class EventController extends Controller
         return view('events.create', ['categories' => $categories, 'eventImages' => $eventImages]);
     }
 
-    public function store(Request $request){
-        if($request->input('action') == "concept"){
-            return dd('Save As Conept');
-        }
-
+    public function store(Request $request, StoreEvent $action){
+        $eventData = $request->session()->pull('eventData');
         $user = Auth::user();
 
-        $company = $user->company ?? $user->ownedCompany;
+        $event = $action->handle($user, $eventData);
 
-        $eventData = $request->session()->pull('eventData');
-
-        $event = Arr::except($eventData, ['tickets', 'participants', 'category']);
-
-        $category = Category::where('slug', $eventData['category'])->firstOrFail();
-
-
-        $event['category_id'] = $category->id;
-        $event['slug'] = Str::slug($event['title']);
-
-        [$street, $postalcode] = explode(',', $eventData['street']);
-        $event['street'] = $street;
-        $event['postal_code'] = $postalcode;
-
-        $createdEvent = DB::transaction(function() use($event, $company,$eventData ) {
-            $createdEvent = $company->events()->create($event);
-
-            if(array_key_exists('tickets', $eventData)){
-                $tickets = $eventData['tickets'];
-                $createdEvent->tickets()->createMany($tickets);
-            }else{
-                $ticket = [
-                    'type' => 'Free',
-                    'quantity_available' => $eventData['max_amount_of_visitors']
-                ];
-                $createdEvent->tickets()->create($ticket);       
-            }
-
-            foreach($eventData['participants'] as $participant){
-                $participant = Participant::firstOrCreate(['email' => $participant['email']],$participant);
-                $createdEvent->participants()->attach($participant);
-            }
-
-            return $createdEvent;
-        });
-                
-        return redirect()->route('events.show',$createdEvent->slug);
+        return redirect()->route('events.show', $event->slug);
     }
 
     public function storePreview(StoreEventRequest $request){
