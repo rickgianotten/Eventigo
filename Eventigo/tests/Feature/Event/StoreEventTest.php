@@ -24,8 +24,9 @@ beforeEach(function(){
 
         'location' => 'The Netherlands',
         'city' => 'Zwolle',
-        'street' => 'test street 72,8902HD',
-
+        'street' => 'test street 72',
+        'postal_code' => '8902HD',
+        
         'start_date'        => now()->format('Y-m-d H:i:s'),
         'end_date'          => now()->addDays(7)->format('Y-m-d H:i:s'),
         'start_time'        => now()->format('Y-m-d') . ' 10:00:00',

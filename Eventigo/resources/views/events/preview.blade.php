@@ -47,7 +47,7 @@
                             <div class="flex-grow pl-3">
                                 <h4 class="text-light-grey text-sm">Location</h4>
                                 <p class="text-white"> {{$eventData['location']}}, {{$eventData['city']}}</p>
-                                <p class="text-white">{{$eventData['street']}}</p>
+                                <p class="text-white">{{$eventData['street']}} {{$eventData['postal_code']}}</p>
                             </div>
                         </x-cards.card>
                         

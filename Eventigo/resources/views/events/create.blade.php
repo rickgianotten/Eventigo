@@ -81,8 +81,11 @@
                                         <x-form.form-group type="text" name="city" placeholder=" e.g. Alpe d'Huez " label="City" :required="false"/>
                                     </div>
 
+                                    <div class="grid gap-4 md:grid-cols-2">
+                                        <x-form.form-group type="text" name="street" placeholder="highway street 98" label="Street" :required="false"/>
+                                        <x-form.form-group type="text" name="postal_code" placeholder="9823KO " label="Postal code" :required="false"/>
+                                    </div>
 
-                                    <x-form.form-group type="text" name="street" placeholder="street number, postal code " label="Street" :required="false"/>
 
                                     <div class="grid gap-4 md:grid-cols-2">
                                         <x-form.form-group type="date" name="start_date" placeholder="" label="Start date" :required="false"/>
