@@ -59,6 +59,7 @@ test('can store event in database',function(){
 
     $this->actingAs($this->user)->withSession(['eventData' => $this->startEventData])->post(route('events.store'))->assertRedirect(route('events.show',$eventSlug));
     assertDatabaseHas('events',[
+        'status' => 'online',
         'title' => 'test event',
         'slug' => $eventSlug,
         'short_description' => 'short test description',
