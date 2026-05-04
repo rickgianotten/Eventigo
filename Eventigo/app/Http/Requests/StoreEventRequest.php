@@ -33,7 +33,8 @@ class StoreEventRequest extends FormRequest
             'location'          => ['required_unless:action,concept', 'nullable', 'string'],
             'city'              => ['required_unless:action,concept', 'nullable', 'string'],
             'street'            => ['required_unless:action,concept', 'nullable', 'string'],
-
+            'postal_code'            => ['required_unless:action,concept', 'nullable', 'string'],
+            
             'start_date'        => ['required_unless:action,concept', 'nullable', 'date', 'after_or_equal:today'],
             'end_date'          => ['required_unless:action,concept', 'nullable', 'date', 'after_or_equal:start_date'],
 
