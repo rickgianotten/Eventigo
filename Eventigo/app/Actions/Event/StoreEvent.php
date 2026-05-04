@@ -23,10 +23,6 @@ class StoreEvent{
         $event['category_id'] = $category->id;
         $event['slug'] = Str::slug($event['title']);
 
-        [$street, $postalcode] = explode(',', $eventData['street']);
-        $event['street'] = $street;
-        $event['postal_code'] = $postalcode;
-
         $createdEvent = DB::transaction(function() use($event, $company,$eventData ) {
             $createdEvent = $company->events()->create($event);
 
