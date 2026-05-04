@@ -6,6 +6,8 @@ use App\Models\Category;
 use App\Models\Company;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
 /**
@@ -20,6 +22,10 @@ class EventFactory extends Factory
      */
     public function definition(): array
     {
+        $eventImages =  File::files(public_path('images/events/defaults'));
+
+        $eventImage = collect($eventImages)->random();
+
         $title = fake()->word();
         return [
             'title'=> $title,
@@ -39,7 +45,7 @@ class EventFactory extends Factory
             'street' => fake()->streetAddress(),
             'postal_code' => fake()->postcode(),
             'company_id' => Company::factory(),
-            'image_path' => fake()->imageUrl(),
+            'image_path' => 'images/events/defaults/' . $eventImage->getFilename(),
             'category_id' => Category::inRandomOrder()->first()->id
         ];
     }
