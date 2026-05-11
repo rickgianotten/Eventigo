@@ -155,6 +155,22 @@ test('can store ticket without', function(string $missingfield){
     'quantity_available'
 ]);
 
+test('can store free event', function(){
+    $this->requestEventData['free_event'] = 'on';
+    $this->requestEventData['max_amount_of_visitors'] = '100';
+
+    $this->actingAs($this->user)->post(route('events.store'), $this->requestEventData);
+
+    $event = Event::where('slug', $this->expectedEvent['slug'])->firstOrFail();
+
+    assertDatabaseHas('tickets', [
+        'event_id' => $event->id,
+        'type' => 'Free',
+        'quantity_available' => $this->requestEventData['max_amount_of_visitors']
+    ]);
+
+});
+
 test('can store particpants for an event concept',function(){
     $participants = [
         [
