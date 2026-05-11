@@ -120,7 +120,35 @@ test('can store tickets for an event concept',function(){
             'quantity_available' => $ticket['quantity_available']
         ]);
     }
-})->todo();
+});
+
+test('can store ticket without', function(string $missingfield){
+    $tickets = [
+        [
+        "type" => 'VIP',
+        'price' => '75,00',
+        'description' => 'Free food & drinks',
+        'quantity_available' => '60'
+    ]
+    ];
+    $tickets[0][$missingfield] = '';
+    
+    $this->requestEventData['tickets'] = $tickets;
+
+    $this->actingAs($this->user)->post(route('events.store'), $this->requestEventData);
+
+    $event = Event::where('slug', $this->expectedEvent['slug'])->firstOrFail();
+
+    foreach($tickets as $ticket){
+        assertDatabaseHas('tickets', [
+            'event_id' => $event->id,
+            'price' => $ticket['price'],
+            'description' => $ticket['description'],
+            'quantity_available' => $ticket['quantity_available']
+        ]);
+    }
+    
+});
 
 test('can store particpants for an event concept',function(){})->todo();
 
