@@ -210,3 +210,34 @@ test('can store participants without', function(string $missingfield){
     'role'
 ]);
 
+test('can link event to participants', function(){
+
+    $participants = [
+        [
+            'name' => 'test participant',
+            'email' => 'test.participant@gmail.com',
+            'role' => 'artist'
+        ],
+        [
+            'name' => 'test participant 1',
+            'email' => 'test.participant1@gmail.com',
+            'role' => 'speaker'
+        ]
+    ];
+
+    $this->requestEventData['participants'] = $participants;
+
+    $this->actingAs($this->user)->post(route('events.store'),$this->requestEventData);
+
+    $event = Event::where('slug', $this->expectedEvent['slug'])->firstOrFail();
+
+    $participants = $event->participants;
+
+    foreach($participants as $participant){
+        assertDatabaseHas('event_participant', [
+        'event_id' => $event->id,
+        'participant_id' => $participant->id
+    ]);
+    }
+});
+
