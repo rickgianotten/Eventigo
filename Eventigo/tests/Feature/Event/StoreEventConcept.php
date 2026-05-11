@@ -177,3 +177,31 @@ test('can store particpants for an event concept',function(){
     }
 });
 
+test('can store participants without', function(string $missingfield){
+    $participants = [
+        [
+            'name' => 'test participant',
+            'email' => 'test.participant@gmail.com',
+            'role' => 'artist'
+        ]
+    ];
+
+    $participants[0][$missingfield] = '';
+
+    $this->requestEventData['participants'] = $participants;
+
+    $this->actingAs($this->user)->post(route('events.store'),$this->requestEventData);
+
+    foreach($participants as $participant){
+        assertDatabaseHas('participants',[
+            'name' => $participant['name'],
+            'email' => $participant['email'],
+            'role' => $participant['role'],
+        ]);
+    }
+})->with([
+    'name',
+    'email',
+    'role'
+]);
+
