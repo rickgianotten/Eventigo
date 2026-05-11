@@ -171,6 +171,23 @@ test('can store free event', function(){
 
 });
 
+test('can store free event without max amount of visitors', function(){
+    $this->requestEventData['free_event'] = 'on';
+    $this->requestEventData['max_amount_of_visitors'] = '';
+
+
+    $this->actingAs($this->user)->post(route('events.store'), $this->requestEventData);
+
+    $event = Event::where('slug', $this->expectedEvent['slug'])->firstOrFail();
+
+    assertDatabaseHas('tickets', [
+        'event_id' => $event->id,
+        'type' => 'Free',
+        'quantity_available' => ''
+    ]);
+
+});
+
 test('can store particpants for an event concept',function(){
     $participants = [
         [
