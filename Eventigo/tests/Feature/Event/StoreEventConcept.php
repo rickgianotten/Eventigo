@@ -1,0 +1,98 @@
+<?php
+
+use App\Models\Category;
+use App\Models\Company;
+use App\Models\Event;
+use App\Models\User;
+use Database\Seeders\CategorySeeder;
+use Database\Seeders\PricingPlanSeeder;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Str;
+
+use function Pest\Laravel\assertDatabaseHas;
+
+pest()->use(RefreshDatabase::class);
+
+beforeEach(function(){
+    $this->seed([PricingPlanSeeder::class, CategorySeeder::class]);
+    $this->company = Company::factory()->create(['pricing_plan_id' => '2']);
+    $this->user = User::find($this->company->user_id);
+
+    //only event data without tickets or participants
+    $this->event =  [
+        'title' => 'test event',
+        'category' => Category::first()->slug,
+        'short_description' => 'short test description',
+        'long_description' => '',
+
+        'location' => 'The Netherlands',
+        'city' => 'Zwolle',
+        'street' => 'test street 72',
+        'postal_code' => '8902HD',
+
+        'start_date'        => now()->format('Y-m-d H:i:s'),
+        'end_date'          => now()->addDays(7)->format('Y-m-d H:i:s'),
+        'start_time'        => now()->format('Y-m-d') . ' 10:00:00',
+        'end_time'          => now()->format('Y-m-d') . ' 12:00:00',
+
+        'image_path' => 'images/events/defaults/art.jpg' 
+    ];
+
+    //expected event in the database
+    $this->expectedEvent = array_merge($this->event, 
+    [
+        'slug' => Str::slug($this->event['title']),
+        'status' => 'concept'
+    ]);
+
+    //event data as sent from the form
+    $this->requestEventData = array_merge($this->event, ['action' => 'concept']);
+});
+
+//without tickets and participants
+test('can store event as concept with complete information',function(){
+
+    $this->actingAs($this->user)->post(route('events.store',$this->requestEventData));
+
+    assertDatabaseHas('events',$this->expectedEvent);
+});
+
+test('can store event as concept without title',function(){
+    $this->requestEventData['title'] = '';
+
+    $this->actingAs($this->user)->post(route('events.store', $this->requestEventData));
+
+    assertDatabaseHas('events', array_merge(['title' => '', 'slug' => ''], $this->expectedEvent));
+
+});
+
+test('can store event as concept without', function(string $missingfield){ 
+    $this->expectedEvent[$missingfield] = '';
+    $this->requestEventData[$missingfield] = '';
+
+    $this->actingAs($this->user)->post(route('events.store', $this->requestEventData));
+
+    assertDatabaseHas('events',$this->expectedEvent);
+})->with([
+        'category',
+        'short_description',
+        'long_description',
+
+        'location',
+        'city',
+        'street',
+        'postal_code',
+
+        'start_date',
+        'end_date',
+        'start_time',
+        'end_time',
+
+        'image_path'
+]);
+
+
+test('can store tickets for an event concept',function(){})->todo();
+
+test('can store particpants for an event concept',function(){})->todo();
+
