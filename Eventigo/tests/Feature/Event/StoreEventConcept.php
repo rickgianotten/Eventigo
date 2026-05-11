@@ -148,7 +148,12 @@ test('can store ticket without', function(string $missingfield){
         ]);
     }
     
-});
+})->with([
+    'type',
+    'price',
+    'description',
+    'quantity_available'
+]);
 
 test('can store particpants for an event concept',function(){
     $participants = [
