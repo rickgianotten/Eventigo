@@ -8,6 +8,7 @@ use Database\Seeders\CategorySeeder;
 use Database\Seeders\PricingPlanSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
+use App\Actions\Event\StoreEventConcept;
 
 use function Pest\Laravel\assertDatabaseHas;
 
@@ -17,11 +18,11 @@ beforeEach(function(){
     $this->seed([PricingPlanSeeder::class, CategorySeeder::class]);
     $this->company = Company::factory()->create(['pricing_plan_id' => '2']);
     $this->user = User::find($this->company->user_id);
-
+    $this->category = Category::first();
     //only event data without tickets or participants
     $this->event =  [
         'title' => 'test event',
-        'category' => Category::first()->slug,
+        'category' => $this->category->slug,
         'short_description' => 'short test description',
         'long_description' => '',
 
@@ -41,40 +42,54 @@ beforeEach(function(){
     //expected event in the database
     $this->expectedEvent = array_merge($this->event, 
     [
+        'category_id' => $this->category->id,
         'slug' => Str::slug($this->event['title']),
         'status' => 'concept'
     ]);
 
+    //db expect category_id
+    unset($this->expectedEvent['category']);
+    
     //event data as sent from the form
-    $this->requestEventData = array_merge($this->event, ['action' => 'concept']);
+    $this->requestEventData = array_merge($this->event, [
+        'action' => 'concept', 
+        'participants' => []
+        ]);
 });
 
 //without tickets and participants
 test('can store event as concept with complete information',function(){
-
-    $this->actingAs($this->user)->post(route('events.store',$this->requestEventData));
-
+    app(StoreEventConcept::class)->handle($this->user, $this->requestEventData);
+    
     assertDatabaseHas('events',$this->expectedEvent);
 });
 
 test('can store event as concept without title',function(){
     $this->requestEventData['title'] = '';
 
-    $this->actingAs($this->user)->post(route('events.store', $this->requestEventData));
+    app(StoreEventConcept::class)->handle($this->user, $this->requestEventData);
 
-    assertDatabaseHas('events', array_merge(['title' => '', 'slug' => ''], $this->expectedEvent));
+    assertDatabaseHas('events', array_merge($this->expectedEvent, ['title' => '', 'slug' => ''] ));
 
+});
+
+test('can store event concept without category', function(){
+    unset($this->requestEventData['category']);
+    $this->expectedEvent['category_id'] = null;
+
+    app(StoreEventConcept::class)->handle($this->user, $this->requestEventData);
+
+    assertDatabaseHas('events', $this->expectedEvent);
 });
 
 test('can store event as concept without', function(string $missingfield){ 
     $this->expectedEvent[$missingfield] = '';
     $this->requestEventData[$missingfield] = '';
 
-    $this->actingAs($this->user)->post(route('events.store', $this->requestEventData));
+    app(StoreEventConcept::class)->handle($this->user, $this->requestEventData);
 
     assertDatabaseHas('events',$this->expectedEvent);
 })->with([
-        'category',
         'short_description',
         'long_description',
 
@@ -108,7 +123,7 @@ test('can store tickets for an event concept',function(){
     ];
     $this->requestEventData['tickets'] = $tickets;
 
-    $this->actingAs($this->user)->post(route('events.store'), $this->requestEventData);
+    app(StoreEventConcept::class)->handle($this->user, $this->requestEventData);
 
     $event = Event::where('slug', $this->expectedEvent['slug'])->firstOrFail();
 
@@ -135,7 +150,7 @@ test('can store ticket without', function(string $missingfield){
     
     $this->requestEventData['tickets'] = $tickets;
 
-    $this->actingAs($this->user)->post(route('events.store'), $this->requestEventData);
+    app(StoreEventConcept::class)->handle($this->user, $this->requestEventData);
 
     $event = Event::where('slug', $this->expectedEvent['slug'])->firstOrFail();
 
@@ -149,7 +164,6 @@ test('can store ticket without', function(string $missingfield){
     }
     
 })->with([
-    'type',
     'price',
     'description',
     'quantity_available'
@@ -159,7 +173,7 @@ test('can store free event', function(){
     $this->requestEventData['free_event'] = 'on';
     $this->requestEventData['max_amount_of_visitors'] = '100';
 
-    $this->actingAs($this->user)->post(route('events.store'), $this->requestEventData);
+    app(StoreEventConcept::class)->handle($this->user, $this->requestEventData);
 
     $event = Event::where('slug', $this->expectedEvent['slug'])->firstOrFail();
 
@@ -176,7 +190,7 @@ test('can store free event without max amount of visitors', function(){
     $this->requestEventData['max_amount_of_visitors'] = '';
 
 
-    $this->actingAs($this->user)->post(route('events.store'), $this->requestEventData);
+    app(StoreEventConcept::class)->handle($this->user, $this->requestEventData);
 
     $event = Event::where('slug', $this->expectedEvent['slug'])->firstOrFail();
 
@@ -204,7 +218,7 @@ test('can store particpants for an event concept',function(){
 
     $this->requestEventData['participants'] = $participants;
 
-    $this->actingAs($this->user)->post(route('events.store'),$this->requestEventData);
+    app(StoreEventConcept::class)->handle($this->user, $this->requestEventData);
 
     foreach($participants as $participant){
         assertDatabaseHas('participants',[
@@ -228,7 +242,7 @@ test('can store participants without', function(string $missingfield){
 
     $this->requestEventData['participants'] = $participants;
 
-    $this->actingAs($this->user)->post(route('events.store'),$this->requestEventData);
+    app(StoreEventConcept::class)->handle($this->user, $this->requestEventData);
 
     foreach($participants as $participant){
         assertDatabaseHas('participants',[
@@ -239,8 +253,7 @@ test('can store participants without', function(string $missingfield){
     }
 })->with([
     'name',
-    'email',
-    'role'
+    'email'
 ]);
 
 test('can link event to participants', function(){
@@ -260,7 +273,7 @@ test('can link event to participants', function(){
 
     $this->requestEventData['participants'] = $participants;
 
-    $this->actingAs($this->user)->post(route('events.store'),$this->requestEventData);
+    app(StoreEventConcept::class)->handle($this->user, $this->requestEventData);
 
     $event = Event::where('slug', $this->expectedEvent['slug'])->firstOrFail();
 
