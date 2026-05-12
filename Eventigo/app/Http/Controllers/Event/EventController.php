@@ -85,13 +85,20 @@ class EventController extends Controller
         return view('events.create', ['categories' => $categories, 'eventImages' => $eventImages]);
     }
 
-    public function store(Request $request, StoreEvent $action){
+    public function store(Request $request, StoreEvent $storeEventAction, StoreEventConcept $storeConceptAction){
         $eventData = $request->session()->pull('eventData');
         $user = Auth::user();
 
-        $event = $action->handle($user, $eventData);
+        if($eventData['action'] == 'store'){
+            $event = $storeEventAction->handle($user, $eventData);
+            return redirect()->route('events.show', $event->slug);
+        };
 
-        return redirect()->route('events.show', $event->slug);
+        if($eventData['action'] == 'concept'){
+            $storeConceptAction->handle($user, $eventData);
+            return dd('concept saved!');
+        };
+
     }
 
     public function storePreview(StoreEventRequest $request,  StoreEventConcept $storeConceptAction){
