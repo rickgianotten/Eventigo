@@ -18,7 +18,7 @@ return new class extends Migration
             $table->enum('type', ['Regular', 'VIP', 'Free']);
             $table->decimal('price', 8, 2)->nullable();
             $table->string('description')->nullable();
-            $table->unsignedInteger('quantity_available');
+            $table->unsignedInteger('quantity_available')->nullable()->default(0);
             $table->unsignedInteger('quantity_sold')->default(0);
             $table->timestamps();
         });
