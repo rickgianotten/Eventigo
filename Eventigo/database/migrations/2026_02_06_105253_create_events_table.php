@@ -21,7 +21,7 @@ return new class extends Migration
             $table->foreignIdFor(Category::class)->nullable()->constrained();
             $table->foreignIdFor(Company::class)->constrained()->cascadeOnDelete();   
             $table->string('title')->nullable();         
-            $table->string('slug')->nullable()->unique();
+            $table->string('slug')->nullable();
             $table->text('short_description')->nullable();
             $table->text('long_description')->nullable();
             $table->date('start_date')->nullable();
