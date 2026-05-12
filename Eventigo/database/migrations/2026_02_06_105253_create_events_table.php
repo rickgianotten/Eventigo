@@ -18,7 +18,7 @@ return new class extends Migration
         Schema::create('events', function (Blueprint $table) {
             $table->id();
             $table->enum('status', ['online', 'offline', 'concept'])->default('online');
-            $table->foreignIdFor(Category::class)->constrained();
+            $table->foreignIdFor(Category::class)->nullable()->constrained();
             $table->foreignIdFor(Company::class)->constrained()->cascadeOnDelete();   
             $table->string('title');         
             $table->string('slug')->unique();
