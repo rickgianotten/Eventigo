@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Event;
 
 use App\Actions\Event\StoreEvent;
+use App\Actions\Event\StoreEventConcept;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreEventRequest;
 use App\Models\Category;
@@ -93,12 +94,8 @@ class EventController extends Controller
         return redirect()->route('events.show', $event->slug);
     }
 
-    public function storePreview(StoreEventRequest $request){
+    public function storePreview(StoreEventRequest $request,  StoreEventConcept $storeConceptAction){
         $validatedValues = $request->validated();
-        
-        if($validatedValues['action'] == 'concept'){
-            return dd($validatedValues);
-        }
 
         if(array_key_exists('image_upload', $validatedValues)){
             $path = $request->file('image_upload')->store('', 'events');
@@ -109,6 +106,12 @@ class EventController extends Controller
             $validatedValues['image_path'] = $validatedValues['event_image'];
             $validatedValues['image_from_upload'] = false;
         };
+        
+        if($validatedValues['action'] == 'concept'){
+            $user = Auth::user();
+            $storeConceptAction->handle($user, $validatedValues);
+            return dd('concept saved!');
+        }
 
         $request->session()->put('eventData', $validatedValues);
        return redirect()->route('events.create.showPreview');
