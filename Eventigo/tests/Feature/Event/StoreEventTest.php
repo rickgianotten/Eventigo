@@ -58,7 +58,7 @@ test('can store event in database',function(){
 
     $eventSlug = Str::slug($this->startEventData['title']);
 
-    $this->actingAs($this->user)->withSession(['eventData' => $this->startEventData])->post(route('events.store'))->assertRedirect(route('events.show',$eventSlug));
+    $this->actingAs($this->user)->withSession(['eventData' => $this->startEventData])->post(route('events.store',['action' => 'store']))->assertRedirect(route('events.show',$eventSlug));
     assertDatabaseHas('events',[
         'status' => 'online',
         'title' => 'test event',
@@ -100,7 +100,7 @@ test('can store event tickets',function(){
 
     $this->startEventData['tickets'] = $tickets;
 
-    $this->actingAs($this->user)->withSession(['eventData' => $this->startEventData])->post(route('events.store'))->assertRedirect(route('events.show',$eventSlug));
+    $this->actingAs($this->user)->withSession(['eventData' => $this->startEventData])->post(route('events.store'),['action' => 'store'])->assertRedirect(route('events.show',$eventSlug));
 
     $event = Event::where('slug', $eventSlug)->firstOrFail();
 
@@ -118,7 +118,7 @@ test('can store event tickets',function(){
 test('can store event thats free',function(){
     $eventSlug = Str::slug($this->startEventData['title']);
 
-    $this->actingAs($this->user)->withSession(['eventData' => $this->startEventData])->post(route('events.store'))->assertRedirect(route('events.show',$eventSlug));
+    $this->actingAs($this->user)->withSession(['eventData' => $this->startEventData])->post(route('events.store'),['action' => 'store'])->assertRedirect(route('events.show',$eventSlug));
 
     $event = Event::where('slug', $eventSlug)->firstOrFail();
 
@@ -132,7 +132,7 @@ test('can store event thats free',function(){
 test('can store participants', function(){
     $eventSlug = Str::slug($this->startEventData['title']);
 
-    $this->actingAs($this->user)->withSession(['eventData' => $this->startEventData])->post(route('events.store'))->assertRedirect(route('events.show',$eventSlug));
+    $this->actingAs($this->user)->withSession(['eventData' => $this->startEventData])->post(route('events.store'),['action' => 'store'])->assertRedirect(route('events.show',$eventSlug));
 
     foreach($this->startEventData['participants'] as $participant){
         assertDatabaseHas('participants',[
@@ -146,7 +146,7 @@ test('can store participants', function(){
 test('can link event to participants', function(){
     $eventSlug = Str::slug($this->startEventData['title']);
 
-    $this->actingAs($this->user)->withSession(['eventData' => $this->startEventData])->post(route('events.store'))->assertRedirect(route('events.show',$eventSlug));
+    $this->actingAs($this->user)->withSession(['eventData' => $this->startEventData])->post(route('events.store'),['action' => 'store'])->assertRedirect(route('events.show',$eventSlug));
 
     $event = Event::where('slug', $eventSlug)->firstOrFail();
 
@@ -164,7 +164,7 @@ test('can link event to participants', function(){
 test('can link event to company', function(){
     $eventSlug = Str::slug($this->startEventData['title']);
 
-    $this->actingAs($this->user)->withSession(['eventData' => $this->startEventData])->post(route('events.store'))->assertRedirect(route('events.show',$eventSlug));
+    $this->actingAs($this->user)->withSession(['eventData' => $this->startEventData])->post(route('events.store'),['action' => 'store'])->assertRedirect(route('events.show',$eventSlug));
 
     $event = Event::where('slug', $eventSlug)->firstOrFail();
 
