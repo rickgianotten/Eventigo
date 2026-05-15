@@ -89,12 +89,12 @@ class EventController extends Controller
         $eventData = $request->session()->pull('eventData');
         $user = Auth::user();
 
-        if($eventData['action'] == 'store'){
+        if($request->input('action') == 'store'){
             $event = $storeEventAction->handle($user, $eventData);
             return redirect()->route('events.show', $event->slug);
         };
 
-        if($eventData['action'] == 'concept'){
+        if($request->input('action') == 'concept'){
             $storeConceptAction->handle($user, $eventData);
             return dd('concept saved!');
         };
@@ -109,11 +109,12 @@ class EventController extends Controller
             $validatedValues['image_path'] = $path;
             $validatedValues['image_from_upload'] = true;
             unset($validatedValues['image_upload']);
-        }else{
+        };
+        if(array_key_exists('event_image', $validatedValues)){
             $validatedValues['image_path'] = $validatedValues['event_image'];
             $validatedValues['image_from_upload'] = false;
         };
-        
+
         if($validatedValues['action'] == 'concept'){
             $user = Auth::user();
             $storeConceptAction->handle($user, $validatedValues);
