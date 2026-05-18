@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Override;
 
 class StoreEventRequest extends FormRequest
 {
@@ -92,4 +93,24 @@ class StoreEventRequest extends FormRequest
             'event_image.required_without'   => 'Please upload your own cover image or select a cover image',
         ];
     }
+
+    #[Override]
+    protected function prepareForValidation(): void
+    {
+        $tickets = $this->input('tickets', []);
+
+        if (empty($tickets)) {
+            return;
+        }
+
+        $this->merge([
+            'tickets' => array_map(function ($ticket) {
+                if (isset($ticket['price'])) {
+                    $ticket['price'] = str_replace(',', '.', (string) $ticket['price']);
+                }
+                return $ticket;
+            }, $tickets)
+        ]);
+    }  
+
 }
