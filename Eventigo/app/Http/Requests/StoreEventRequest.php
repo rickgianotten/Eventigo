@@ -56,7 +56,7 @@ class StoreEventRequest extends FormRequest
 
             'free_event'            => ['nullable'],
 
-            'max_amount_of_visitors' => ['nullable', 'integer', 'min:1', 'required_if:free_event,true,1,yes,on'],
+            'max_amount_of_visitors' => ['nullable', 'integer', 'min:1', Rule::when($this->input('action') !== 'concept', ['required_if:free_event,true,1,yes,on'])],
 
             'image_upload' => ['nullable', 'image', Rule::when($this->input('action') !== 'concept', ['required_without:event_image'])],
             'event_image'  => ['nullable', 'string', Rule::when($this->input('action') !== 'concept', ['required_without:image_upload'])],

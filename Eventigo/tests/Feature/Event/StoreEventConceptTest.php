@@ -60,7 +60,8 @@ beforeEach(function(){
 //without tickets and participants
 test('can store event as concept with complete information',function(){
     app(StoreEventConcept::class)->handle($this->user, $this->requestEventData);
-    
+    $this->actingAs($this->user)->post(route('event.store'),$this->requestEventData);
+    $this->actingAs($this->user)->post(route('event.storePreview'),$this->requestEventData);
     assertDatabaseHas('events',$this->expectedEvent);
 });
 
