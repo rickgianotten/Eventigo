@@ -118,7 +118,7 @@ class EventController extends Controller
         if($validatedValues['action'] == 'concept'){
             $user = Auth::user();
             $storeConceptAction->handle($user, $validatedValues);
-            return dd('concept saved!');
+            return response()->json(['message' => 'concept saved!']);
         }
 
         $request->session()->put('eventData', $validatedValues);
