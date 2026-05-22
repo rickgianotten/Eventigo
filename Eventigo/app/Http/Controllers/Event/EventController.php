@@ -96,7 +96,7 @@ class EventController extends Controller
 
         if($request->input('action') == 'concept'){
             $storeConceptAction->handle($user, $eventData);
-            return dd('concept saved!');
+            return response()->json(['message' => 'concept saved!']);
         };
 
     }
