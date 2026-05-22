@@ -54,7 +54,7 @@ class EventController extends Controller
 
         $categories = Category::all();
         $locations = Event::select('location')->distinct()->pluck('location');
-        $events = $query->with(['category', 'tickets'])->simplePaginate(9);
+        $events = $query->with(['category', 'tickets'])->where('status', 'online')->simplePaginate(9);
 
         return view('events.index', ['events' => $events, 
         'categories' => $categories, 

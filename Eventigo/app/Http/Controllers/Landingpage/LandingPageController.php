@@ -12,7 +12,7 @@ class LandingPageController extends Controller
     public function __invoke()
     {
         $categories = Category::all();
-        $events = Event::with('category', 'tickets')->limit(6)->get();
+        $events = Event::with('category', 'tickets')->where('status', 'online')->limit(6)->get();
         return view('landingpage.home', ['categories' => $categories, 'events' => $events]);
     }
 }
