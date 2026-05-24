@@ -97,7 +97,7 @@ test('can store preview in the session with uploaded image', function(){
     // making it free only for passing validation
     $event['free_event'] = 'on';
     $event['max_amount_of_visitors'] = '120';
-
+    unset($event['event_image']);
     Storage::fake('events');
 
     $uploadedImage = UploadedFile::fake()->image('events_image.jpg');

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Event;
 
 use App\Actions\Event\StoreEvent;
+use App\Actions\Event\StoreEventConcept;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreEventRequest;
 use App\Models\Category;
@@ -53,7 +54,7 @@ class EventController extends Controller
 
         $categories = Category::all();
         $locations = Event::select('location')->distinct()->pluck('location');
-        $events = $query->with(['category', 'tickets'])->simplePaginate(9);
+        $events = $query->with(['category', 'tickets'])->where('status', 'online')->simplePaginate(9);
 
         return view('events.index', ['events' => $events, 
         'categories' => $categories, 
@@ -84,31 +85,41 @@ class EventController extends Controller
         return view('events.create', ['categories' => $categories, 'eventImages' => $eventImages]);
     }
 
-    public function store(Request $request, StoreEvent $action){
+    public function store(Request $request, StoreEvent $storeEventAction, StoreEventConcept $storeConceptAction){
         $eventData = $request->session()->pull('eventData');
         $user = Auth::user();
 
-        $event = $action->handle($user, $eventData);
+        if($request->input('action') == 'store'){
+            $event = $storeEventAction->handle($user, $eventData);
+            return redirect()->route('events.show', $event->slug);
+        };
 
-        return redirect()->route('events.show', $event->slug);
+        if($request->input('action') == 'concept'){
+            $storeConceptAction->handle($user, $eventData);
+            return response()->json(['message' => 'concept saved!']);
+        };
+
     }
 
-    public function storePreview(StoreEventRequest $request){
+    public function storePreview(StoreEventRequest $request,  StoreEventConcept $storeConceptAction){
         $validatedValues = $request->validated();
-        
-        if($validatedValues['action'] == 'concept'){
-            return dd($validatedValues);
-        }
 
         if(array_key_exists('image_upload', $validatedValues)){
             $path = $request->file('image_upload')->store('', 'events');
             $validatedValues['image_path'] = $path;
             $validatedValues['image_from_upload'] = true;
             unset($validatedValues['image_upload']);
-        }else{
+        };
+        if(array_key_exists('event_image', $validatedValues)){
             $validatedValues['image_path'] = $validatedValues['event_image'];
             $validatedValues['image_from_upload'] = false;
         };
+
+        if($validatedValues['action'] == 'concept'){
+            $user = Auth::user();
+            $storeConceptAction->handle($user, $validatedValues);
+            return response()->json(['message' => 'concept saved!']);
+        }
 
         $request->session()->put('eventData', $validatedValues);
        return redirect()->route('events.create.showPreview');

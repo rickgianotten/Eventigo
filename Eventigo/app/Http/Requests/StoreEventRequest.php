@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Override;
 
 class StoreEventRequest extends FormRequest
 {
@@ -56,7 +57,7 @@ class StoreEventRequest extends FormRequest
 
             'free_event'            => ['nullable'],
 
-            'max_amount_of_visitors' => ['nullable', 'integer', 'min:1', 'required_if:free_event,true,1,yes,on'],
+            'max_amount_of_visitors' => ['nullable', 'integer', 'min:1', Rule::when($this->input('action') !== 'concept', ['required_if:free_event,true,1,yes,on'])],
 
             'image_upload' => ['nullable', 'image', Rule::when($this->input('action') !== 'concept', ['required_without:event_image'])],
             'event_image'  => ['nullable', 'string', Rule::when($this->input('action') !== 'concept', ['required_without:image_upload'])],
@@ -92,4 +93,24 @@ class StoreEventRequest extends FormRequest
             'event_image.required_without'   => 'Please upload your own cover image or select a cover image',
         ];
     }
+
+    #[Override]
+    protected function prepareForValidation(): void
+    {
+        $tickets = $this->input('tickets', []);
+
+        if (empty($tickets)) {
+            return;
+        }
+
+        $this->merge([
+            'tickets' => array_map(function ($ticket) {
+                if (isset($ticket['price'])) {
+                    $ticket['price'] = str_replace(',', '.', (string) $ticket['price']);
+                }
+                return $ticket;
+            }, $tickets)
+        ]);
+    }  
+
 }
