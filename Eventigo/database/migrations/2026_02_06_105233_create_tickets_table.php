@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('description')->nullable();
             $table->unsignedInteger('quantity_available')->nullable()->default(0);
             $table->unsignedInteger('quantity_sold')->default(0);
+            $table->integer('stripe_price_id');
             $table->timestamps();
         });
     }
