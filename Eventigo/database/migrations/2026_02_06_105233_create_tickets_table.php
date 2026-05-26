@@ -16,7 +16,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(Event::class)->constrained()->cascadeOnDelete();
             $table->enum('type', ['Regular', 'VIP', 'Free']);
-            $table->decimal('price', 8, 2)->nullable();
+            $table->unsignedInteger('price')->nullable();
             $table->string('description')->nullable();
             $table->unsignedInteger('quantity_available')->nullable()->default(0);
             $table->unsignedInteger('quantity_sold')->default(0);
