@@ -122,7 +122,7 @@
             
             {{-- tickets --}}
             <div>
-                <x-form.form method="GET" action="{{route('checkout.create')}}" class="h-full">
+                <x-form.form method="GET" action="{{route('checkout.store')}}" class="h-full">
                     <x-cards.card class="h-full">
                         <div class="p-5 flex flex-col h-full">
                             <h3 class="text-white font-bold flex items-center gap-2 text-xl mb-3"><x-icons.ticket-icon/> Tickets</h3>
