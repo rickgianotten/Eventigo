@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Event;
 use App\Models\OrderItem;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -14,11 +15,13 @@ return new class extends Migration
     {
         Schema::create('order_tickets', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(OrderItem::class);
-            $table->uuid('ticket_code');
-            $table->enum('status', ['active', 'used', 'expired']);
-            $table->timestamps('valid_from');
-            $table->timestamps('valid_until');
+            $table->foreignIdFor(OrderItem::class)->constrained();
+            $table->foreignIdFor(Event::class)->constrained();
+            $table->uuid('ticket_code')->unique();
+            $table->enum('status', ['active', 'used', 'expired'])->default('active');
+            $table->timestamp('valid_from');
+            $table->timestamp('valid_until');
+            $table->timestamp('used_at')->nullable();
         });
     }
 
