@@ -22,7 +22,7 @@ class TicketFactory extends Factory
 
         return [
             'type' => $type,
-            'price' => $type === 'Free' ? null : fake()->randomFloat(2),
+            'price' => $type === 'Free' ? null : fake()->numberBetween(1, 120),
             'description' => fake()->optional()->text(100),
             'quantity_available' => $quantity_available,
             'quantity_sold' => fake()->numberBetween(0, $quantity_available),
