@@ -21,7 +21,7 @@ class StartCheckoutAction{
             return [$order, $lockedTickets];
         });
 
-        $checkoutData = collect($tickets)->map(fn($ticket) =>[
+        $lineItems = collect($tickets)->map(fn($ticket) =>[
             'price_data' =>[
                 'currency' => 'USD',
                 'unit_amount' => $lockedTickets[$ticket['ticket_id']]->price,
@@ -33,9 +33,10 @@ class StartCheckoutAction{
         ])->values()->toArray();
 
         // stripe checkout
-        $checkout = $user->checkout($checkoutData,[
+        $checkout = $user->checkout($lineItems,[
             'succes_url' => '',
             'cancel_url' => '',
+            'customer_email' => $user->email,
             'metadata' => [
                 'order_id' => $order->id,
             ]
@@ -45,8 +46,8 @@ class StartCheckoutAction{
         
         
         // update order paid in webhook
-        // order tickets
-        //mail
+        // order tickets in webhook
+        //mail in webhook
     }
 }
 
