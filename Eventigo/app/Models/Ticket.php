@@ -18,12 +18,8 @@ class Ticket extends Model
         return $this->belongsTo(Event::class);
     }
 
-protected function price(): Attribute
-{
-    return Attribute::make(
-        get: fn (?int $value) => $value !== null ? $value / 100 : null,
-        set: fn (?float $value) => $value !== null ? (int) round($value * 100) : null,
-    );
-}
+    protected $casts = [
+        'price' => 'integer',
+    ];
 
 }
