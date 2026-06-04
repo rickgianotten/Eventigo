@@ -6,8 +6,8 @@ use App\Models\Order;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class CreateTicketsAction{
-    public function handle(Order $order){
+    public function handle(Order $order):array{
         $tickets = $order->load('orderItems.tickets')->orderItems->flatMap(fn($item) => $item->tickets);
-        $tickets->map(fn($ticket) => QrCode::format('png')->generate($ticket->ticket_code));
+        return $tickets->map(fn($ticket) => QrCode::format('png')->generate($ticket->ticket_code));
     }
 }
