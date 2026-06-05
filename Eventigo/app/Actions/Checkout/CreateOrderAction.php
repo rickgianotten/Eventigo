@@ -5,6 +5,7 @@ use App\Models\Ticket;
 use App\Models\User;
 
 use App\Actions\Checkout\CreateOrderItemsAction;
+use App\Enums\OrderStatus;
 use Illuminate\Support\Collection;
 
 /**
@@ -24,7 +25,7 @@ class CreateOrderAction{
 
         $order = $user->orders()->create([
             'event_id' => $event->id,
-            'payment_status' => 'pending',
+            'payment_status' => OrderStatus::Pending,
             'total_price' => $totalPrice
         ]); 
 
