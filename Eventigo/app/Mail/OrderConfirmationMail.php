@@ -32,7 +32,7 @@ class OrderConfirmationMail extends Mailable
     {
         return new Envelope(
             from: 'noreply@inventigo.nl',
-            subject: 'Order Confirmation Mail',
+            subject: "Ready for {$this->order->event}? Here are your tickets",
         );
     }
 
@@ -42,7 +42,7 @@ class OrderConfirmationMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'view.name',
+            view: 'mails.OrderConfirmation',
         );
     }
 
