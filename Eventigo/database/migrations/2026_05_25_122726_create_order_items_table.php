@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignIdFor(Order::class)->constrained();
             $table->foreignIdFor(Ticket::class)->constrained();
             $table->unsignedInteger('quantity');
-            $table->unsignedInteger('unit_price');
+            $table->unsignedInteger('unit_price')->nullable();
         });
     }
 
