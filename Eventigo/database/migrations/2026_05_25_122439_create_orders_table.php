@@ -17,10 +17,10 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Event::class)->constrained();
-            $table->integer('stripe_session_id');
+            $table->integer('stripe_session_id')->nullable();
             $table->decimal('total_price', 8, 2);
             $table->string('payment_status');
-            $table->timestamp('paid_at');
+            $table->timestamp('paid_at')->nullable();
         });
     }
 
