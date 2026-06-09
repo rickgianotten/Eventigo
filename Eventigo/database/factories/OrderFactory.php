@@ -24,7 +24,7 @@ class OrderFactory extends Factory
             'user_id' => User::inRandomOrder()->first()->id,
             'total_price' => fake()->numberBetween(1, 150),
             'payment_status' => $orderStatus,
-            'paid_at' => $orderStatus == 'paid' ? now() : null,
+            'paid_at' => $orderStatus == OrderStatus::Paid ? now() : null,
         ];
     }
 }
