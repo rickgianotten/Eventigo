@@ -16,21 +16,19 @@ class OrderSeeder extends Seeder
      */
     public function run(): void
     {
-        $event = Event::inRandomOrder()->first();
-        $tickets = $event->tickets;
+        Event::inRandomOrder()->take(5)->get()->each(function ($event){
+            $tickets = $event->tickets;
 
-        $order = Order::factory()->create(['event_id' => $event->id]);
-
-        foreach ($tickets as $ticket){
-            OrderItem::factory()->create([
-                'order_id' => $order->id,
-                'ticket_id' => $ticket->id,
-                'unit_price' => $ticket->price
-            ]);            
-        }
-
-        app(CreateOrderTicketsAction::class)->handle($order);
-
-
+            Order::factory(3)->create(['event_id' => $event->id])->each(function ($order) use ($tickets) {
+                foreach ($tickets as $ticket){
+                    OrderItem::factory()->create([
+                        'order_id' => $order->id,
+                        'ticket_id' => $ticket->id,
+                        'unit_price' => $ticket->price
+                    ]);            
+                }
+                app(CreateOrderTicketsAction::class)->handle($order);
+            });
+        });
     }
 }
