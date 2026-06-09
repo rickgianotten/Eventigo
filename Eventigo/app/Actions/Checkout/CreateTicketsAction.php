@@ -8,6 +8,6 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 class CreateTicketsAction{
     public function handle(Order $order):array{
         $tickets = $order->load('orderItems.tickets')->orderItems->flatMap(fn($item) => $item->tickets);
-        return $tickets->map(fn($ticket) => QrCode::format('png')->generate($ticket->ticket_code));
+        return $tickets->map(fn($ticket) => QrCode::format('png')->generate($ticket->ticket_code))->toArray();
     }
 }
