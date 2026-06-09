@@ -22,6 +22,8 @@ return new class extends Migration
             $table->timestamp('valid_from');
             $table->timestamp('valid_until');
             $table->timestamp('used_at')->nullable();
+            $table->timestamp('updated_at');
+            $table->timestamp('created_at');
         });
     }
 

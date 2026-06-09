@@ -21,6 +21,8 @@ return new class extends Migration
             $table->decimal('total_price', 8, 2);
             $table->string('payment_status');
             $table->timestamp('paid_at')->nullable();
+            $table->timestamp('updated_at');
+            $table->timestamp('created_at');
         });
     }
 

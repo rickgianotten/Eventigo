@@ -19,6 +19,8 @@ return new class extends Migration
             $table->foreignIdFor(Ticket::class)->constrained();
             $table->unsignedInteger('quantity');
             $table->unsignedInteger('unit_price')->nullable();
+            $table->timestamp('updated_at');
+            $table->timestamp('created_at');
         });
     }
 
