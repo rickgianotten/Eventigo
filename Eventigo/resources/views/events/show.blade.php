@@ -128,7 +128,7 @@
                             <h3 class="text-white font-bold flex items-center gap-2 text-xl mb-3"><x-icons.ticket-icon/> Tickets</h3>
 
                             <div class="grid auto-rows-max space-y-6 grow">
-                                @foreach ($event->tickets as $ticket)
+                                @foreach ($event->tickets as $index => $ticket)
                                 <div class="ticket">
                                     <x-cards.card>
                                         <div class="p-3 space-y-2">
@@ -153,7 +153,8 @@
                                                 @endif
                                                 <div class="flex items-center gap-1.5">
                                                     <button type="button" class="text-white bg-mid-blue h-5 w-5 rounded-full flex items-center justify-center p-3.5 cursor-pointer hover:opacity-90 btn_decrease">-</button>
-                                                    <x-form.input type="number" name="ticket_quantity_{{$ticket->id}}" class="bg-transparent border-none no-spinner text-center ticket_quantity ticket_quantity" value="0" min="0" max="{{$ticket->quantity_available}}"/>
+                                                    <input type="number" name="tickets[{{$index}}][ticket_quantity]" class="bg-transparent border-none no-spinner text-center ticket_quantity ticket_quantity text-white focus:ring-0 focus:outline-none" value="{{old('ticket.' . $index . '.ticket_quantity', 0)}}" min="0" max="{{$ticket->quantity_available}}" readonly/>
+                                                    <input type="text" name="tickets[{{$index}}][ticket_id]" value="{{$ticket->id}}" hidden/>
                                                     <button type="button" class="text-white bg-orange h-5 w-5 rounded-full flex items-center justify-center p-3.5 cursor-pointer hover:opacity-90 btn_increase">+</button>
                                                 </div>
                                             </div>
