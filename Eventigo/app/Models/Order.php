@@ -11,6 +11,7 @@ use Override;
 
 class Order extends Model
 {
+    /** @use HasFactory<\Database\Factories\OrderFactory> */
     use HasFactory;
     public $fillable = ['user_id', 'event_id','stripe_session_id', 'total_price', 'payment_status', 'paid_at'];
 
@@ -20,6 +21,10 @@ class Order extends Model
 
     public function event():BelongsTo{
         return $this->belongsTo(Event::class);
+    }
+
+    public function user():BelongsTo{
+        return $this->belongsTo(User::class);
     }
 
     protected function casts():array
