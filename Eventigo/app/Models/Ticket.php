@@ -18,6 +18,13 @@ class Ticket extends Model
         return $this->belongsTo(Event::class);
     }
 
+    public function price(bool $inCents = false): int|string
+    {
+        $cents = $this->price;
+        
+        return $inCents ? $cents : number_format($this->price/ 100, 2, '.', ',');
+    }
+
     protected $casts = [
         'price' => 'integer',
     ];
