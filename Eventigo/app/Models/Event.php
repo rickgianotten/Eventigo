@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Storage;
 
 class Event extends Model
 {
-    /** @use HasFactory<\Database\Factories\EventsFactory> */
+    /** @use HasFactory<\Database\Factories\EventFactory> */
     use HasFactory;
     public $fillable = [
         'status',

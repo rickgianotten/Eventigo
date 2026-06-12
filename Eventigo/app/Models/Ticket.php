@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Ticket extends Model
 {
-    /** @use HasFactory<\Database\Factories\TicketsFactory> */
+    /** @use HasFactory<\Database\Factories\TicketFactory> */
     use HasFactory;
 
     public $fillable = ['type', 'price', 'description','quantity_available', 'quantity_sold'];

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Participant extends Model
 {
+    /** @use HasFactory<\Database\Factories\ParticipantFactory> */
     use HasFactory;
     public $fillable = ['name', 'email', 'role']; 
 }
