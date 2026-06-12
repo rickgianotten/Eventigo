@@ -27,10 +27,17 @@ class Order extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function totalPrice(bool $inCents = false): int|string
+    {
+        $cents = $this->total_price;
+        
+        return $inCents ? $cents : number_format($this->total_price/ 100, 2, '.', ',');
+    }
+
     protected function casts():array
     {
         return [
-            'payment_status' => OrderStatus::class
+            'payment_status' => OrderStatus::class,
         ];
     }
 }
