@@ -6,6 +6,7 @@ use App\Models\User;
 
 use App\Actions\Checkout\CreateOrderItemsAction;
 use App\Enums\OrderStatus;
+use App\Models\Order;
 use Illuminate\Support\Collection;
 
 /**
@@ -16,7 +17,7 @@ class CreateOrderAction{
 
     public function __construct(Private CreateOrderItemsAction $CreateOrderItemsAction){}
 
-    public function handle(User $user,array $tickets, Collection $lockedTickets){
+    public function handle(User $user,array $tickets, Collection $lockedTickets): Order{
 
         $totalPrice = collect($tickets)->sum(fn($ticket) => $lockedTickets[$ticket['ticket_id']]->price * $ticket['quantity']);
 
