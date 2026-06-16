@@ -19,7 +19,7 @@ class CreateOrderAction{
 
     public function handle(User $user,array $tickets, Collection $lockedTickets): Order{
 
-        $totalPrice = collect($tickets)->sum(fn($ticket) => $lockedTickets[$ticket['ticket_id']]->price * $ticket['quantity']);
+        $totalPrice = collect($tickets)->sum(fn($ticket) => $lockedTickets[$ticket['ticket_id']]->price * $ticket['ticket_quantity']);
 
         // order pending
         $event = $lockedTickets->first()->event;
