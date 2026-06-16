@@ -60,3 +60,9 @@ it('links order to the correct event', function(){
 
     expect($order->id)->toBe($this->event->id);
 });
+
+it('links order to user', function(){
+    $order = app(CreateOrderAction::class)->handle($this->user, $this->ticketsFormData, $this->lockedTickets);
+
+    expect($order->user_id)->toBe($this->user->id);    
+});
