@@ -15,7 +15,6 @@ class CreateOrderItemsAction{
         collect($tickets)->each(function($ticket) use ($order, $lockedTickets){
             $lockedTicket = $lockedTickets[$ticket['ticket_id']];
 
-            // order items
             $order->orderItems()->create([
                 'ticket_id' => $lockedTicket->id,
                 'quantity' => $ticket['ticket_quantity'],
