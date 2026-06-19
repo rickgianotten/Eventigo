@@ -54,9 +54,6 @@ it('can store order items for multipule tickets', function(){
    });
 });
 
-it('can store order items for single ticket', function(){
-})->todo('filteren op de tickets formdata en tickets met quantity 0 eruit halen');
-
 it('can store order items for free ticket', function(){
     $freeTickets = Ticket::factory(2)->create(['event_id' => $this->event->id, 'type' => 'Free', 'price' => null]);
 
