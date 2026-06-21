@@ -13,8 +13,8 @@ class CreateOrderTicketsAction{
                 $item->tickets()->create([
                     'event_id' => $order->event->id,
                     'ticket_code' => Str::uuid(),
-                    'valid_from' => Carbon::parse($order->event->start_date, '', $order->event->start_time),
-                    'valid_until' => Carbon::parse($order->event->end_date, '', $order->event->end_time),
+                    'valid_from' => Carbon::parse($order->event->start_date),
+                    'valid_until' => Carbon::parse($order->event->end_date),
                 ]);
             }
         }
