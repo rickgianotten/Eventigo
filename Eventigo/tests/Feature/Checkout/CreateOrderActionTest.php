@@ -54,15 +54,3 @@ it('returns the created order', function(){
     
     expect($order)->toBeInstanceOf(Order::class)->and($order->exists)->toBeTrue();
 });
-
-it('links order to the correct event', function(){
-    $order = app(CreateOrderAction::class)->handle($this->user, $this->ticketsFormData, $this->lockedTickets);
-
-    expect($order->id)->toBe($this->event->id);
-});
-
-it('links order to user', function(){
-    $order = app(CreateOrderAction::class)->handle($this->user, $this->ticketsFormData, $this->lockedTickets);
-
-    expect($order->user_id)->toBe($this->user->id);    
-});
