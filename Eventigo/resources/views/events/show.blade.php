@@ -138,7 +138,7 @@
                                                     @if($ticket->type == "Free")
                                                         <span class="ticket_price">Free</span>
                                                     @else
-                                                        $ <span class="ticket_price">{{number_format($ticket->price, 2, ',', '.')}}</span>                                                       
+                                                        $ <span class="ticket_price">{{$ticket->price()}}</span>                                                       
                                                     @endif   
                                                 </p>
                                             </div>
