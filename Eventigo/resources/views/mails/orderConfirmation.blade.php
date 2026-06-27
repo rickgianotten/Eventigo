@@ -207,7 +207,7 @@
                                         <h5>{{$order->user->name}}</h5>
                                         <p class="text-small">{{$item->ticket->description}}</p>
                                     </div>
-                                <p style="font-weight: 700">{{ $item->ticket->price ? '$' . $item->ticket->price : 'Free' }}</p> 
+                                <p style="font-weight: 700">{{ $item->ticket->price ? '$' . $item->ticket->price() : 'Free' }}</p> 
                                 </div>  
                             </div>  
                     
@@ -224,7 +224,7 @@
                     @endforeach
                     <div class="total">
                         <p>Total</p>
-                        <p>${{$order->total_price}}</p>
+                        <p>${{$order->totalPrice()}}</p>
                     </div>
                 </div>
             </div>
