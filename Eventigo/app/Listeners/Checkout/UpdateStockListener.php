@@ -22,7 +22,6 @@ class UpdateStockListener
      */
     public function handle(OrderPaid $event): void
     {
-        // update stock action aanroepen
         $this->action->handle($event->order);
     }
 }
