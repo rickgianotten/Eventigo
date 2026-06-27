@@ -26,7 +26,7 @@ class Ticket extends Model
     }
 
     public function available():int{
-        return $this->quantity_available - $this->quantity_available;
+        return $this->quantity_available - $this->quantity_sold;
     }
 
     protected $casts = [
