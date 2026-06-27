@@ -146,10 +146,10 @@
                                                 <p class="text-light-grey text-xs">{{$ticket->description}}</p>
                                             </div>
                                             <div class="flex items-center">
-                                                @if($ticket->quantity_available - $ticket->quantity_sold >= 12 )
-                                                    <p class="text-light-grey text-xs flex-grow"> <span class="max_quantity_of_tickets">{{$ticket->quantity_available -$ticket->quantity_sold}}</span> tickets available</p>
+                                                @if($ticket->available() >= 12 )
+                                                    <p class="text-light-grey text-xs flex-grow"> <span class="max_quantity_of_tickets">{{$ticket->available()}}</span> tickets available</p>
                                                 @else
-                                                    <p class="text-orange text-xs flex-grow">only <span class="max_quantity_of_tickets">{{$ticket->quantity_available -$ticket->quantity_sold}}</span> tickets available!</p>
+                                                    <p class="text-orange text-xs flex-grow">only <span class="max_quantity_of_tickets">{{$ticket->available()}}</span> tickets available!</p>
                                                 @endif
                                                 <div class="flex items-center gap-1.5">
                                                     <button type="button" class="text-white bg-mid-blue h-5 w-5 rounded-full flex items-center justify-center p-3.5 cursor-pointer hover:opacity-90 btn_decrease">-</button>
