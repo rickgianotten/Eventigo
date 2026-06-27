@@ -23,10 +23,8 @@ class CreateOrderTicketsListener
      */
     public function handle(OrderPaid $event): void
     {
-        // create order tickets action aanroepen
         $this->action->handle($event->order);
 
-        // event OrderCreated afvuren
         OrderCreated::dispatch($event->order);
     }
 }
