@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Listeners\StripeWebhookListener;
+use App\Listeners\Checkout\StripeWebhookListener;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Event;
