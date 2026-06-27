@@ -25,6 +25,10 @@ class Ticket extends Model
         return $inCents ? $cents : number_format($this->price/ 100, 2, '.', ',');
     }
 
+    public function available():int{
+        return $this->quantity_available - $this->quantity_available;
+    }
+
     protected $casts = [
         'price' => 'integer',
     ];
