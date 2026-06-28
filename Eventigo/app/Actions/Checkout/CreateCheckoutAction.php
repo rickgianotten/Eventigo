@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\DB;
 
 use App\Actions\Checkout\CreateOrderAction;
 use App\Models\Ticket;
+use Exception;
 use Laravel\Cashier\Checkout;
 
 class CreateCheckoutAction{
@@ -21,6 +22,13 @@ class CreateCheckoutAction{
         [$order, $lockedTickets] = DB::transaction(function() use ($user, $tickets){
             $ticketIds = collect($tickets)->pluck('ticket_id');
             $lockedTickets = Ticket::lockForUpdate()->whereIn('id', $ticketIds)->get()->keyBy('id');
+            
+            foreach($tickets as $ticket){
+                $lockedTicket = $lockedTickets[$ticket['ticket_id']];
+                if($ticket['ticket_quantity'] > $lockedTicket->available()){
+                    throw new Exception('Not enough tickets available!');
+                }
+            };
 
             $order = $this->createOrderAction->handle($user, $tickets, $lockedTickets);
 
