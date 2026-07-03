@@ -5,6 +5,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
 use App\Actions\Checkout\CreateOrderAction;
+use App\Events\Checkout\OrderPaid;
 use App\Models\Ticket;
 use Exception;
 use Laravel\Cashier\Checkout;
@@ -13,7 +14,7 @@ class CreateCheckoutAction{
 
     public function __construct(Private CreateOrderAction $createOrderAction){}
 
-    public function handle(User $user, array $tickets): Checkout{
+    public function handle(User $user, array $tickets): Checkout | null{
 
         $tickets = array_filter($tickets, function ($ticket) {
             return $ticket['ticket_quantity'] != 0;
@@ -34,6 +35,15 @@ class CreateCheckoutAction{
 
             return [$order, $lockedTickets];
         });
+
+        $isFree = collect($tickets)->every(
+            fn($ticket) => is_null($lockedTickets[$ticket['ticket_id']]->price)
+        );
+
+        if($isFree){
+            OrderPaid::dispatch($order);
+            return null;
+        };
 
         $lineItems = collect($tickets)->map(fn($ticket) =>[
             'price_data' =>[
