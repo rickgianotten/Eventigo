@@ -11,11 +11,6 @@ class HandleCheckoutCompletedAction{
         $metadata = $object['metadata'];
         $order = Order::findOrFail($metadata['order_id']);
 
-        $order->update([
-            'payment_status' => OrderStatus::Paid,
-            'paid_at' => now()
-        ]);
-
         OrderPaid::dispatch($order);
     }
 }
