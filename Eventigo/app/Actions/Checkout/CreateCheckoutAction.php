@@ -48,7 +48,9 @@ class CreateCheckoutAction{
             return $order; 
         };
 
-        $lineItems = collect($tickets)->map(fn($ticket) =>[
+        $lineItems = collect($tickets)
+        ->filter(fn($ticket)=> !is_null($lockedTickets[$ticket['ticket_id']]->price))
+        ->map(fn($ticket) =>[
             'price_data' =>[
                 'currency' => 'USD',
                 'unit_amount' => $lockedTickets[$ticket['ticket_id']]->price,
