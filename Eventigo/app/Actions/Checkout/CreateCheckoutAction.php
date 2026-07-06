@@ -5,9 +5,11 @@ use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
 use App\Actions\Checkout\CreateOrderAction;
+use App\Enums\OrderStatus;
 use App\Events\Checkout\OrderPaid;
 use App\Models\Order;
 use App\Models\Ticket;
+use Error;
 use Exception;
 use Laravel\Cashier\Checkout;
 
@@ -57,13 +59,19 @@ class CreateCheckoutAction{
             'quantity' => $ticket['ticket_quantity'],
         ])->values()->toArray();
 
-        $checkout = $user->checkout($lineItems,[
-            'success_url' => route('checkout.succes'),
-            'cancel_url' => route('checkout.cancel'),
-            'metadata' => [
-                'order_id' => $order->id,
-            ]
-        ]);
+        try{
+            $checkout = $user->checkout($lineItems,[
+                'success_url' => route('checkout.succes'),
+                'cancel_url' => route('checkout.cancel'),
+                'metadata' => [
+                    'order_id' => $order->id,
+                ]
+            ]);
+        }catch(Exception $e){
+            $order->update(['payment_status' => OrderStatus::Failed]);
+            throw new Exception('Oops, something went wrong at checkout. Please try again.');
+        };
+
 
         $order->update(['stripe_session_id' => $checkout->id]);
         
