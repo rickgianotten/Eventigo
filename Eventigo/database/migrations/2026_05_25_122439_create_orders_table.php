@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Event::class)->constrained();
+            $table->string('order_number')->unique();
             $table->integer('stripe_session_id')->nullable();
             $table->decimal('total_price', 8, 2);
             $table->string('payment_status');
