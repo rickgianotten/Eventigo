@@ -11,6 +11,7 @@ use Database\Seeders\PricingPlanSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 use function Pest\Laravel\assertDatabaseHas;
+use function PHPUnit\Framework\assertNotNull;
 
 pest()->use(RefreshDatabase::class);
 
@@ -38,6 +39,12 @@ it('can create order with status pending', function(){
         'total_price' => $order->total_price
     ]);
 
+});
+
+it('generate order number automatically', function(){
+    $order = app(CreateOrderAction::class)->handle($this->user, $this->ticketsFormData, $this->lockedTickets);
+
+    assertNotNull($order->order_number);
 });
 
 it('calculates the correct total price', function(){
