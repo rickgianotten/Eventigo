@@ -10,7 +10,6 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-use App\Actions\Checkout\CreateTicketsAction;
 use Illuminate\Mail\Mailables\Attachment;
 
 class OrderConfirmationMail extends Mailable
@@ -20,9 +19,9 @@ class OrderConfirmationMail extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct(public Order $order)
+    public function __construct(public Order $order, private array $qrCodes)
     {
-        
+        $this->order->load(['orderItems.tickets', 'orderItems.ticket', 'event']);
     }
 
     /**
@@ -32,7 +31,7 @@ class OrderConfirmationMail extends Mailable
     {
         return new Envelope(
             from: 'noreply@inventigo.nl',
-            subject: "Ready for {$this->order->event}? Here are your tickets",
+            subject: "Ready for {$this->order->event->title}? Here are your tickets",
         );
     }
 
@@ -42,7 +41,7 @@ class OrderConfirmationMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'mails.OrderConfirmation',
+            view: 'mails.orderConfirmation',
         );
     }
 
@@ -51,16 +50,11 @@ class OrderConfirmationMail extends Mailable
      *
      * @return array<int, \Illuminate\Mail\Mailables\Attachment>
      */
-    public function attachments(CreateTicketsAction $action): array
+    public function attachments(): array
     {
-        $qrCodes = $action->handle($this->order);
-        $attachments = [];
-
-        foreach ($qrCodes as $index => $qrCode){
-            $ticketNumber = $index + 1;
-            $attachments[] =  Attachment::fromData(fn() => $qrCode, "ticket-{$ticketNumber}.png");
-        }
-        
-        return $attachments;
+        return collect($this->qrCodes)->map(fn($qr) => 
+            Attachment::fromData(fn() => (string) $qr['svg'], "{$qr['ticket_code']}.svg")
+                ->withMime('image/svg+xml')
+        )->toArray();
     }
 }
