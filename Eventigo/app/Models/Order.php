@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Override;
+use Illuminate\Support\Facades\DB;
+
 
 class Order extends Model
 {
@@ -34,10 +35,35 @@ class Order extends Model
         return $inCents ? $cents : number_format($this->total_price/ 100, 2, '.', ',');
     }
 
+    public static function generateOrderNumber():string{
+        return DB::transaction(function () {
+            $year = now()->year;
+
+            $lastOrder = static::where('order_number', 'like', "ORD-{$year}-%")
+            ->lockForUpdate()
+            ->orderByDesc('order_number')
+            ->first();
+
+            $nextNumber = $lastOrder ? ((int) substr($lastOrder->order_number, -5)) + 1 : 1;
+
+            return sprintf('ORD-%d-%05d', $year, $nextNumber);            
+        });
+    }
+
     protected function casts():array
     {
         return [
             'payment_status' => OrderStatus::class,
         ];
     }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function($order){
+            $order->order_number = static::generateOrderNumber();
+        });
+    }
+
 }
