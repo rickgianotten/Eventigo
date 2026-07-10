@@ -169,7 +169,6 @@
             </div>
 
             <div class="event-card">
-                <img src="{{$order->event->getEventImage()}}" alt="{{$order->event->title}}">
                 <div class="event-detail-container">
                     <h3 style="padding-bottom: 0.3rem">{{$order->event->title}}</h3>
                     <p class="text-small">🗓️ {{$order->event->start_date->format('d F Y')}} • {{$order->event->start_time->format('H:i')}} -  {{$order->event->end_date->format('d F Y')}} • {{$order->event->end_time->format('H:i')}}</p>
