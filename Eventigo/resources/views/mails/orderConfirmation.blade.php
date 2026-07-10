@@ -165,7 +165,7 @@
         <div style="margin: 1rem auto 0 auto; max-width: 32rem; display: grid; gap: 1rem;">
 
             <div>
-                <p class="text-small" style="text-align: center;">Hi {{$order->user->name}}, your order [order number] has been confirmed. Below you will find {{ $order->orderItems->sum(fn($item) => $item->quantity) }} tickets for the event.</p>
+                <p class="text-small" style="text-align: center;">Hi {{$order->user->name}}, your order <span style="font-weight: 700; color: black;">{{$order->order_number}}</span> has been confirmed. Below you will find {{ $order->orderItems->sum(fn($item) => $item->quantity) }} tickets for the event.</p>
             </div>
 
             <div class="event-card">
