@@ -63,7 +63,7 @@ class CreateCheckoutAction{
 
         try{
             $checkout = $user->checkout($lineItems,[
-                'success_url' => route('checkout.succes'),
+                'success_url' => route('checkout.succes') . '?session_id={CHECKOUT_SESSION_ID}',
                 'cancel_url' => route('checkout.cancel'),
                 'metadata' => [
                     'order_id' => $order->id,
