@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Checkout;
 
 use App\Actions\Checkout\CreateCheckoutAction;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\CreateCheckoutRequest;
+use App\Http\Requests\Checkout\CreateCheckoutRequest;
 use App\Models\Order;
 use Exception;
 use Illuminate\Http\Request;
@@ -20,7 +20,7 @@ class CheckoutController extends Controller
             $result = $action->handle($user, $request->validated('tickets'));
             
             if($result instanceof Order){
-                return redirect()->route('checkout.succes');
+                return redirect()->route('checkout.succes')->with('order_id', $result->id);
             }
 
             return $result;
@@ -31,7 +31,16 @@ class CheckoutController extends Controller
     }
 
     public function succes(Request $request): View{
-        return view('checkout.succes');
+
+         $order = $request->session_id
+            ? Order::where('stripe_session_id', $request->session_id)
+                ->where('user_id', Auth::id())
+                ->firstOrFail()
+            : Order::where('id', session('order_id'))
+                ->where('user_id', Auth::id())
+                ->firstOrFail();
+
+        return view('checkout.succes', ['order' => $order]);
     }
 
     public function cancel(Request $request): View{
