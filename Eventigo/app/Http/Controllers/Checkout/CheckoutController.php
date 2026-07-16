@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Checkout;
 
 use App\Actions\Checkout\CreateCheckoutAction;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Checkout\CheckoutSuccesRequest;
 use App\Http\Requests\Checkout\CreateCheckoutRequest;
 use App\Models\Order;
 use Exception;
@@ -30,9 +31,9 @@ class CheckoutController extends Controller
         }
     }
 
-    public function succes(Request $request): View{
+    public function succes(CheckoutSuccesRequest $request): View{
 
-         $order = $request->session_id
+         $order = $request->validated('session_id')
             ? Order::where('stripe_session_id', $request->session_id)
                 ->where('user_id', Auth::id())
                 ->firstOrFail()
