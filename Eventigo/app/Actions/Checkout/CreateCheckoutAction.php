@@ -62,6 +62,7 @@ class CreateCheckoutAction{
         ])->values()->toArray();
 
         try{
+            session(['checkout_completed' => true]);
             $checkout = $user->checkout($lineItems,[
                 'success_url' => route('checkout.succes') . '?session_id={CHECKOUT_SESSION_ID}',
                 'cancel_url' => route('checkout.cancel'),
@@ -70,6 +71,7 @@ class CreateCheckoutAction{
                 ]
             ]);
         }catch(Exception $e){
+            session()->forget('checkout_completed');
             $order->update(['payment_status' => OrderStatus::Failed]);
             throw new Exception('Oops, something went wrong at checkout. Please try again.');
         };
