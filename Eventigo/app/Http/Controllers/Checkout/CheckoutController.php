@@ -21,6 +21,7 @@ class CheckoutController extends Controller
             $result = $action->handle($user, $request->validated('tickets'));
             
             if($result instanceof Order){
+                session(['checkout_completed' => true]);
                 return redirect()->route('checkout.succes')->with('order_id', $result->id);
             }
 
