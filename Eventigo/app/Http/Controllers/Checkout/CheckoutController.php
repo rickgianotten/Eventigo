@@ -32,20 +32,20 @@ class CheckoutController extends Controller
         }
     }
 
-    public function succes(CheckoutSuccesRequest $request): View{
+    public function succes(Request $request): View{
 
-         $order = $request->validated('session_id')
-            ? Order::where('stripe_session_id', $request->session_id)
-                ->where('user_id', Auth::id())
-                ->firstOrFail()
-            : Order::where('id', session('order_id'))
-                ->where('user_id', Auth::id())
-                ->firstOrFail();
+        $order = Order::findOrFail(session('order_id'));
+
+        session()->forget('order_id');
 
         return view('checkout.succes', ['order' => $order]);
     }
 
     public function cancel(Request $request): View{
-        return view('checkout.cancel');
+        $order = Order::findOrFail(session('order_id'));
+
+        session()->forget('order_id');
+
+        return view('checkout.cancel', ['order' => $order]);
     }
 }
