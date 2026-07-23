@@ -231,7 +231,7 @@
             <div class="text-small text-darkgrey" >
                 <p>Please keep this email in a safe place — 
                     we’ll scan the QR code on each ticket at the entrance. Questions? Email us at 
-                    <a href="mailto:support@eventigo.nl" style="color: hsl(18 95% 55%); text-decoration: underline; cursor: pointer;">support@eventigo.nl</a>.
+                    <a href="mailto:{{env('MAIL_SUPPORT_ADDRESS')}}" style="color: hsl(18 95% 55%); text-decoration: underline; cursor: pointer;">{{env('MAIL_SUPPORT_ADDRESS')}}</a>.
                 </p>
             </div>
         </div>
