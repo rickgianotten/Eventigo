@@ -49,8 +49,10 @@ class Event extends Model
         return $this->belongsToMany(Participant::class);
     }
 
-    public function cheapestTicketPrice():?float{
-        return $this->tickets()->min('price');
+    public function cheapestTicketPrice(bool $inCents = false):?float{
+        $cheapestPrice = $this->tickets()->min('price');
+
+        return $inCents ? $cheapestPrice  : number_format($cheapestPrice/ 100, 2, '.', ',');
     }
 
     public function isFreeEvent():bool{
