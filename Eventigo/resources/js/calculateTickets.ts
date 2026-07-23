@@ -7,7 +7,7 @@ let totalAmountOfTickets = 0;
 
 function parseEuropeanNumber(input: string | null): number {
   if (!input) return 0;
-  const normalized = input.replace(/\./g, '').replace(',', '.');
+  const normalized = input.replace(/[$\s]/g, '').replace(/,/g, '');
   const result = parseFloat(normalized);
   return isNaN(result) ? 0 : Math.round(result * 100) / 100;
 }
