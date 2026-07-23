@@ -3,7 +3,7 @@
 namespace App\Listeners\Checkout;
 
 use App\Actions\Checkout\HandleCheckoutCompletedAction;
-use App\Events\Checkout\OrderPaid;
+use App\Actions\Checkout\HandleCheckoutExpiredAction;
 use Laravel\Cashier\Events\WebhookReceived;
 
 class StripeWebhookListener
@@ -11,7 +11,7 @@ class StripeWebhookListener
     /**
      * Create the event listener.
      */
-    public function __construct(private HandleCheckoutCompletedAction $action)
+    public function __construct(private HandleCheckoutCompletedAction $checkoutCompletedAction, private HandleCheckoutExpiredAction $checkoutExpiredAction)
     {
         //
     }
@@ -25,7 +25,8 @@ class StripeWebhookListener
         $object = $event->payload['data']['object'];
 
         match ($type) {
-            'checkout.session.completed' => $this->action->handle($object),
+            'checkout.session.completed' => $this->checkoutCompletedAction->handle($object),
+            'checkout.session.expired' => $this->checkoutExpiredAction->handle($object),
             default => null,
         };
     }
