@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Checkout;
 
 use App\Actions\Checkout\CreateCheckoutAction;
+use App\Enums\OrderStatus;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Checkout\CheckoutSuccesRequest;
 use App\Http\Requests\Checkout\CreateCheckoutRequest;
 use App\Models\Order;
 use Exception;
@@ -43,6 +43,8 @@ class CheckoutController extends Controller
 
     public function cancel(Request $request): View{
         $order = Order::findOrFail(session('order_id'));
+
+        $order->update(['payment_status' => OrderStatus::Cancelled]);
 
         session()->forget('order_id');
 
