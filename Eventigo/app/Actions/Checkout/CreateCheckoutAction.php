@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\DB;
 use App\Actions\Checkout\CreateOrderAction;
 use App\Enums\OrderStatus;
 use App\Events\Checkout\OrderPaid;
+use App\Exceptions\CheckoutException;
+use App\Exceptions\NotEnoughTicketsException;
 use App\Models\Order;
 use App\Models\Ticket;
 use Error;
@@ -30,7 +32,7 @@ class CreateCheckoutAction{
             foreach($tickets as $ticket){
                 $lockedTicket = $lockedTickets[$ticket['ticket_id']];
                 if($ticket['ticket_quantity'] > $lockedTicket->available()){
-                    throw new Exception('Not enough tickets available!');
+                    throw new NotEnoughTicketsException('Not enough tickets available!');
                 }
             };
 
@@ -76,7 +78,7 @@ class CreateCheckoutAction{
         }catch(Exception $e){
             session()->forget(['checkout_completed', 'order_id']);
             $order->update(['payment_status' => OrderStatus::Failed]);
-            throw new Exception('Oops, something went wrong at checkout. Please try again.');
+            throw new CheckoutException('Oops, something went wrong at checkout. Please try again.');
         };
 
 
