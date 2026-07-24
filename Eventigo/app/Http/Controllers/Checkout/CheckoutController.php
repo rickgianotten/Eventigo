@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Checkout;
 
 use App\Actions\Checkout\CreateCheckoutAction;
 use App\Enums\OrderStatus;
+use App\Exceptions\CheckoutException;
+use App\Exceptions\NotEnoughTicketsException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Checkout\CreateCheckoutRequest;
 use App\Models\Order;
@@ -27,8 +29,10 @@ class CheckoutController extends Controller
 
             return $result;
             
-        } catch (Exception $e) {
-            return back()->with('message', $e->getMessage());
+        } catch (NotEnoughTicketsException $e) {
+            return back()->with('info', $e->getMessage());
+        } catch(CheckoutException $e){
+            return back()->with('error', $e->getMessage());
         }
     }
 
