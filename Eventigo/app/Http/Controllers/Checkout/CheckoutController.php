@@ -4,12 +4,11 @@ namespace App\Http\Controllers\Checkout;
 
 use App\Actions\Checkout\CreateCheckoutAction;
 use App\Enums\OrderStatus;
-use App\Exceptions\CheckoutException;
-use App\Exceptions\NotEnoughTicketsException;
+use App\Exceptions\Checkout\CheckoutException;
+use App\Exceptions\Checkout\NotEnoughTicketsException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Checkout\CreateCheckoutRequest;
 use App\Models\Order;
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
