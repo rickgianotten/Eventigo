@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Checkout;
 
 use App\Actions\Checkout\CreateCheckoutAction;
 use App\Enums\OrderStatus;
+use App\Enums\toast\ToastStatus;
 use App\Exceptions\Checkout\CheckoutException;
 use App\Exceptions\Checkout\NotEnoughTicketsException;
 use App\Http\Controllers\Controller;
@@ -29,9 +30,9 @@ class CheckoutController extends Controller
             return $result;
             
         } catch (NotEnoughTicketsException $e) {
-            return back()->with('info', $e->getMessage());
+            return back()->with(ToastStatus::Info, $e->getMessage());
         } catch(CheckoutException $e){
-            return back()->with('error', $e->getMessage());
+            return back()->with(ToastStatus::Error, $e->getMessage());
         }
     }
 
