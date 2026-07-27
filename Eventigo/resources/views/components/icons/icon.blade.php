@@ -1,1 +1,1 @@
-<span {{$attributes->merge(['class' => "material-symbols-outlined text-light-grey"])}}>{{$slot}}</span>
+<span {{$attributes->merge(['class' => "material-symbols-outlined"])}}>{{$slot}}</span>
