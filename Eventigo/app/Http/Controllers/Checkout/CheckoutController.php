@@ -30,9 +30,17 @@ class CheckoutController extends Controller
             return $result;
             
         } catch (NotEnoughTicketsException $e) {
-            return back()->with(ToastStatus::Info, $e->getMessage());
+            return back()->with('toast', [
+                'status' => ToastStatus::Info,
+                'title' => null,
+                'message' => $e->getMessage()
+            ]);
         } catch(CheckoutException $e){
-            return back()->with(ToastStatus::Error, $e->getMessage());
+            return back()->with('toast', [
+                'status' => ToastStatus::Error,
+                'title' => 'Payment Failed',
+                'message' => $e->getMessage()
+            ]);
         }
     }
 
