@@ -1,4 +1,9 @@
+
 <x-layout>
+    @if (session('toast'))
+        <x-toast.toast :status="session('toast')['status']" :title="session('toast')['title']" :message="session('toast')['message']"/> 
+    @endif
+    
     <section class="bg-cover bg-center h-[50vh] relative px-4 mb-10" style="background-image: url('{{ $event->getEventImage() }}')">
             {{-- overlay --}}
             <div class="absolute inset-0 bg-black/55"></div>
