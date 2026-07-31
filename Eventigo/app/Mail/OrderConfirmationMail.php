@@ -12,7 +12,7 @@ use Illuminate\Queue\SerializesModels;
 
 use Illuminate\Mail\Mailables\Attachment;
 
-class OrderConfirmationMail extends Mailable
+class OrderConfirmationMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
