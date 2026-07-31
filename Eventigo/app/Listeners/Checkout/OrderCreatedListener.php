@@ -26,6 +26,6 @@ class OrderCreatedListener
 
         $qrCodes = $this->action->handle($event->order);
 
-        Mail::to($user)->send(new OrderConfirmationMail($event->order, $qrCodes));
+        Mail::to($user)->queue(new OrderConfirmationMail($event->order, $qrCodes));
     }
 }
