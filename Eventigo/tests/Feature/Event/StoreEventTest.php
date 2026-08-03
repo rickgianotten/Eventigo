@@ -105,9 +105,11 @@ test('can store event tickets',function(){
     $event = Event::where('slug', $eventSlug)->firstOrFail();
 
     foreach($tickets as $ticket){
+        $priceInCents =  (int) $ticket['price'] * 100;
+
         assertDatabaseHas('tickets', [
             'event_id' => $event->id,
-            'price' => $ticket['price'],
+            'price' => $priceInCents,
             'description' => $ticket['description'],
             'quantity_available' => $ticket['quantity_available']
         ]);
