@@ -40,7 +40,12 @@ class StoreEvent{
 
     private function createTickets(array $eventData, Event $createdEvent){
         if(array_key_exists('tickets', $eventData)){
-            $tickets = $eventData['tickets'];
+            $tickets = collect($eventData['tickets'])
+            ->map(function($ticket){
+                $ticket['price'] = (int) $ticket['price'] * 100;
+                return $ticket;
+            });
+
             $createdEvent->tickets()->createMany($tickets);
         }else{
             $ticket = [
