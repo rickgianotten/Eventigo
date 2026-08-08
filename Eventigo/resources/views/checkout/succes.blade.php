@@ -57,9 +57,9 @@
                     </div>
 
                     <div class="grid gap-2">
-                        <button class="text-white text-sm flex items-center justify-center gap-1.5 rounded-md px-3 py-1.5 cursor-pointer hover:opacity-75" style="background: var(--gradient-button)">
+                        <a href="{{route('orders.download', $order->id)}}" class="text-white text-sm flex items-center justify-center gap-1.5 rounded-md px-3 py-1.5 cursor-pointer hover:opacity-75" style="background: var(--gradient-button)">
                             <x-icons.download-icon class="text-white"/> Download tickets
-                        </button>
+                        </a>
                         <x-nav-button class="text-sm py-1.5 gap-1.5" href="{{route('events.show', $order->event->slug)}}">Event details <x-icons.arrow-right/> </x-nav-button>
                     </div>
                 </div>             
