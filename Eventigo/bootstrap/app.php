@@ -29,7 +29,12 @@ return Application::configure(basePath: dirname(__DIR__))
             Route::middleware('web')
                     ->prefix('checkout')
                     ->name('checkout.')
-                    ->group(base_path('routes/checkout.php'));                    
+                    ->group(base_path('routes/checkout.php'));
+
+            Route::middleware('web')
+                    ->prefix('orders')
+                    ->name('orders.')
+                    ->group(base_path('routes/orders.php'));                      
         },
     )
     ->withMiddleware(function (Middleware $middleware): void {
