@@ -52,10 +52,6 @@ it('redirects to succes with order_id and set checkout_completed in session when
 
 });
 
-it('redirects to succes when checkout succeeds', function(){})->todo();
-
-it('redirects to cancel when checkout has been canceled', function(){})->todo();
-
 it('returns the checkout response when payment is required', function(){})->todo();
 
 it('returns back with toats when NotEnoughTicketsException is thrown',function(){})->todo();
