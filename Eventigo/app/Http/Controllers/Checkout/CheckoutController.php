@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Checkout;
 
 use App\Actions\Checkout\CreateCheckoutAction;
-use App\Enums\OrderStatus;
+use App\Enums\Order\OrderStatus;
 use App\Enums\toast\ToastStatus;
 use App\Exceptions\Checkout\CheckoutException;
 use App\Exceptions\Checkout\NotEnoughTicketsException;

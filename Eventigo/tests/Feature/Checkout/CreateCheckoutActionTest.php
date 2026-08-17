@@ -2,7 +2,7 @@
 
 use App\Actions\Checkout\CreateCheckoutAction;
 use App\Actions\Checkout\CreateOrderAction;
-use App\Enums\OrderStatus;
+use App\Enums\Order\OrderStatus;
 use App\Events\Checkout\OrderPaid;
 use App\Exceptions\Checkout\CheckoutException;
 use App\Exceptions\Checkout\NotEnoughTicketsException;

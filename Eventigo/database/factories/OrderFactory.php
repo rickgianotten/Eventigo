@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Enums\OrderStatus;
+use App\Enums\Order\OrderStatus;
 use App\Models\Event;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;

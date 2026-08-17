@@ -2,7 +2,7 @@
 
 use App\Actions\Checkout\CreateOrderAction;
 use App\Actions\Checkout\CreateOrderItemsAction;
-use App\Enums\OrderStatus;
+use App\Enums\Order\OrderStatus;
 use App\Models\Event;
 use App\Models\Order;
 use App\Models\Ticket;

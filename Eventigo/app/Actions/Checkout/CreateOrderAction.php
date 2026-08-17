@@ -5,7 +5,7 @@ use App\Models\Ticket;
 use App\Models\User;
 
 use App\Actions\Checkout\CreateOrderItemsAction;
-use App\Enums\OrderStatus;
+use App\Enums\Order\OrderStatus;
 use App\Models\Order;
 use Illuminate\Support\Collection;
 

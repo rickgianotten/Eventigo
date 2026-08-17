@@ -2,7 +2,7 @@
 
 namespace App\Actions\Checkout;
 
-use App\Enums\OrderStatus;
+use App\Enums\Order\OrderStatus;
 use App\Events\Checkout\OrderPaid;
 use App\Models\Order;
 
