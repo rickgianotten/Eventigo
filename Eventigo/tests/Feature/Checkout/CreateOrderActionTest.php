@@ -1,6 +1,7 @@
 <?php
 
 use App\Actions\Checkout\CreateOrderAction;
+use App\Actions\Checkout\CreateOrderItemsAction;
 use App\Enums\OrderStatus;
 use App\Models\Event;
 use App\Models\Order;
@@ -27,9 +28,15 @@ beforeEach(function(){
         ];
     })->toArray();
     $this->lockedTickets = Ticket::with(['event'])->whereIn('id', collect($this->ticketsFormData)->pluck('ticket_id'))->get()->keyBy('id');
+    $this->mockedCreatedOrderItemsAction = Mockery::mock(CreateOrderItemsAction::class);
+    app()->instance(CreateOrderItemsAction::class, $this->mockedCreatedOrderItemsAction);
 });
 
 it('can create order with status pending', function(){
+    $this->mockedCreatedOrderItemsAction->shouldReceive('handle')->once()->withArgs(function($actuelOrder, $actuelLockedTickets, $actuelTickets){
+        return $actuelOrder instanceof Order  && $actuelLockedTickets === $this->lockedTickets && $actuelTickets === $this->ticketsFormData;
+    });
+
     $order = app(CreateOrderAction::class)->handle($this->user, $this->ticketsFormData, $this->lockedTickets);
 
     assertDatabaseHas('orders',[
@@ -42,12 +49,20 @@ it('can create order with status pending', function(){
 });
 
 it('generate order number automatically', function(){
+    $this->mockedCreatedOrderItemsAction->shouldReceive('handle')->once()->withArgs(function($actuelOrder, $actuelLockedTickets, $actuelTickets){
+        return $actuelOrder instanceof Order  && $actuelLockedTickets === $this->lockedTickets && $actuelTickets === $this->ticketsFormData;
+    });
+
     $order = app(CreateOrderAction::class)->handle($this->user, $this->ticketsFormData, $this->lockedTickets);
 
     assertNotNull($order->order_number);
 });
 
 it('calculates the correct total price', function(){
+    $this->mockedCreatedOrderItemsAction->shouldReceive('handle')->once()->withArgs(function($actuelOrder, $actuelLockedTickets, $actuelTickets){
+        return $actuelOrder instanceof Order  && $actuelLockedTickets === $this->lockedTickets && $actuelTickets === $this->ticketsFormData;
+    });
+
     $totalPrice = collect($this->ticketsFormData)->sum(fn($FormData) => $this->lockedTickets[$FormData['ticket_id']]->price * $FormData['ticket_quantity']);
 
     $order = app(CreateOrderAction::class)->handle($this->user, $this->ticketsFormData, $this->lockedTickets);
@@ -57,6 +72,10 @@ it('calculates the correct total price', function(){
 });
 
 it('returns the created order', function(){
+    $this->mockedCreatedOrderItemsAction->shouldReceive('handle')->once()->withArgs(function($actuelOrder, $actuelLockedTickets, $actuelTickets){
+        return $actuelOrder instanceof Order  && $actuelLockedTickets === $this->lockedTickets && $actuelTickets === $this->ticketsFormData;
+    });
+
     $order = app(CreateOrderAction::class)->handle($this->user, $this->ticketsFormData, $this->lockedTickets);
     
     expect($order)->toBeInstanceOf(Order::class)->and($order->exists)->toBeTrue();
