@@ -2,6 +2,9 @@
 
 use App\Actions\Checkout\CreateCheckoutAction;
 use App\Enums\Order\OrderStatus;
+use App\Enums\toast\ToastStatus;
+use App\Exceptions\Checkout\CheckoutException;
+use App\Exceptions\Checkout\NotEnoughTicketsException;
 use App\Models\Event;
 use App\Models\Order;
 use App\Models\Ticket;
@@ -9,7 +12,7 @@ use App\Models\User;
 use Database\Seeders\CategorySeeder;
 use Database\Seeders\PricingPlanSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-
+use Laravel\Cashier\Checkout;
 
 pest()->use(RefreshDatabase::class);
 
@@ -18,6 +21,7 @@ beforeEach(function(){
     $this->user = User::factory()->create();
     $this->event = Event::factory()->create();
     $this->ticket = Ticket::factory()->for($this->event)->create(['quantity_available' => '100', 'quantity_sold' => '0', 'price' => '200']);
+    $this->order = Order::factory()->for($this->user)->create(['event_id' => $this->event->id]);
     $this->mockedCreateCheckoutAction = $this->mock(CreateCheckoutAction::class);
 });
 
@@ -35,28 +39,66 @@ function makeRequest(Ticket $ticket): array{
 }
 
 it('redirects to succes with order_id and set checkout_completed in session when order is free', function(){
-    $order = Order::factory()->for($this->user)->create(['payment_status' => OrderStatus::Paid, 'event_id' => $this->event->id]);
+    $this->order->update(['payment_status' => OrderStatus::Paid]);
 
     $this->ticket->update(['price' => null]);
 
     $this->mockedCreateCheckoutAction->shouldReceive('handle')->once()->withArgs(function($user, $tickets){
         return $user->is($this->user) && $tickets  === makeRequest($this->ticket);
-    })->andReturn($order);
+    })->andReturn($this->order);
 
     $response = $this->actingAs($this->user)->post(route('checkout.store'),['tickets' => makeRequest($this->ticket)]);
 
     expect(session('checkout_completed'))->toBeTrue();
 
     $response->assertRedirect(route('checkout.succes'))
-    ->assertSessionHas('order_id', $order->id);
+    ->assertSessionHas('order_id', $this->order->id);
 
 });
 
-it('returns the checkout response when payment is required', function(){})->todo();
+it('returns the checkout response when payment is required', function(){
+    $mockedCheckout = Mockery::mock(Checkout::class);
 
-it('returns back with toats when NotEnoughTicketsException is thrown',function(){})->todo();
+    $mockedCheckout->shouldReceive('toResponse')->once()->andReturn(redirect('https://checkout.stripe.com/c/pay/cs_test_123'));
 
-it('returns back with toats when CheckoutException is thrown',function(){})->todo();
+    $this->mockedCreateCheckoutAction->shouldReceive('handle')->once()->withArgs(function($user, $tickets){
+        return $user->is($this->user) && $tickets  === makeRequest($this->ticket);
+    })->andReturn($mockedCheckout);
+
+    $response = $this->actingAs($this->user)->post(route('checkout.store'),['tickets' => makeRequest($this->ticket)]);
+
+    $response->assertRedirect('https://checkout.stripe.com/c/pay/cs_test_123');
+
+});
+
+it('returns back with toats when NotEnoughTicketsException is thrown',function(){
+    $this->mockedCreateCheckoutAction->shouldReceive('handle')->once()->withArgs(function($user, $tickets){
+        return $user->is($this->user) && $tickets  === makeRequest($this->ticket);
+    })->andThrow(new NotEnoughTicketsException('Not enough tickets available!'));
+
+    $response = $this->actingAs($this->user)->post(route('checkout.store'), ['tickets' => makeRequest($this->ticket)]);
+
+    $response->assertRedirectBack()->assertSessionHas('toast', [
+        'status' => ToastStatus::Info,
+        'title' => null,
+        'message' => 'Not enough tickets available!'
+    ]);
+    
+});
+
+it('returns back with toats when CheckoutException is thrown',function(){
+    $this->mockedCreateCheckoutAction->shouldReceive('handle')->once()->withArgs(function($user, $tickets){
+        return $user->is($this->user) && $tickets  === makeRequest($this->ticket);
+    })->andThrow(new CheckoutException('Oops, something went wrong at checkout. Please try again.'));
+
+    $response = $this->actingAs($this->user)->post(route('checkout.store'), ['tickets' => makeRequest($this->ticket)]);
+
+    $response->assertRedirectBack()->assertSessionHas('toast', [
+        'status' => ToastStatus::Error,
+        'title' => 'Payment Failed',
+        'message' => 'Oops, something went wrong at checkout. Please try again.'
+    ]);    
+});
 
 it('returns the succes view and forget the order_id in session',function(){})->todo();
 
