@@ -15,8 +15,14 @@ beforeEach(function(){
     $this->seed([PricingPlanSeeder::class, CategorySeeder::class]);
     $this->user = User::factory()->create();
     $this->event = Event::factory()->create();
-    $this->ticket = Ticket::factory()->for($this->event)->create();
+    $this->ticket = Ticket::factory()->for($this->event)->create(['quantity_available' => '100', 'quantity_sold' => '0', 'price' => '200']);
     $this->mockedCreateCheckoutAction = $this->mock(CreateCheckoutAction::class);
+    $this->makeRequest = fn () => [
+        [
+            'ticket_id' => $this->ticket->id,
+            'ticket_quantity' => '2',
+        ]
+    ];
 });
 
 afterEach(function(){
