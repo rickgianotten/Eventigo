@@ -1,7 +1,9 @@
 <?php
 
 use App\Actions\Checkout\CreateCheckoutAction;
+use App\Enums\OrderStatus;
 use App\Models\Event;
+use App\Models\Order;
 use App\Models\Ticket;
 use App\Models\User;
 use Database\Seeders\CategorySeeder;
@@ -17,19 +19,38 @@ beforeEach(function(){
     $this->event = Event::factory()->create();
     $this->ticket = Ticket::factory()->for($this->event)->create(['quantity_available' => '100', 'quantity_sold' => '0', 'price' => '200']);
     $this->mockedCreateCheckoutAction = $this->mock(CreateCheckoutAction::class);
-    $this->makeRequest = fn () => [
-        [
-            'ticket_id' => $this->ticket->id,
-            'ticket_quantity' => '2',
-        ]
-    ];
 });
 
 afterEach(function(){
     Mockery::close();
 });
 
-it('redirects to succes with order_id and set checkout_completed in session when order is free', function(){})->todo();
+function makeRequest(Ticket $ticket): array{
+    return [
+        [
+            'ticket_id' => $ticket->id,
+            'ticket_quantity' => '2',
+        ]
+    ];
+}
+
+it('redirects to succes with order_id and set checkout_completed in session when order is free', function(){
+    $order = Order::factory()->for($this->user)->create(['payment_status' => OrderStatus::Paid, 'event_id' => $this->event->id]);
+
+    $this->ticket->update(['price' => null]);
+
+    $this->mockedCreateCheckoutAction->shouldReceive('handle')->once()->withArgs(function($user, $tickets){
+        return $user->is($this->user) && $tickets  === makeRequest($this->ticket);
+    })->andReturn($order);
+
+    $response = $this->actingAs($this->user)->post(route('checkout.store'),['tickets' => makeRequest($this->ticket)]);
+
+    expect(session('checkout_completed'))->toBeTrue();
+
+    $response->assertRedirect(route('checkout.succes'))
+    ->assertSessionHas('order_id', $order->id);
+
+});
 
 it('redirects to succes when checkout succeeds', function(){})->todo();
 
