@@ -73,7 +73,7 @@ it('returns the checkout response when payment is required', function(){
 
 });
 
-it('returns back with toats when NotEnoughTicketsException is thrown',function(){
+it('returns back with toast when NotEnoughTicketsException is thrown',function(){
     $this->mockedCreateCheckoutAction->shouldReceive('handle')->once()->withArgs(function($user, $tickets){
         return $user->is($this->user) && $tickets  === makeRequest($this->ticket);
     })->andThrow(new NotEnoughTicketsException('Not enough tickets available!'));
@@ -88,7 +88,7 @@ it('returns back with toats when NotEnoughTicketsException is thrown',function()
     
 });
 
-it('returns back with toats when CheckoutException is thrown',function(){
+it('returns back with toast when CheckoutException is thrown',function(){
     $this->mockedCreateCheckoutAction->shouldReceive('handle')->once()->withArgs(function($user, $tickets){
         return $user->is($this->user) && $tickets  === makeRequest($this->ticket);
     })->andThrow(new CheckoutException('Oops, something went wrong at checkout. Please try again.'));
