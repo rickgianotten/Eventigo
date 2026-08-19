@@ -14,6 +14,8 @@ use Database\Seeders\PricingPlanSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Cashier\Checkout;
 
+use function Pest\Laravel\assertDatabaseHas;
+
 pest()->use(RefreshDatabase::class);
 
 beforeEach(function(){
@@ -100,8 +102,31 @@ it('returns back with toats when CheckoutException is thrown',function(){
     ]);    
 });
 
-it('returns the succes view and forget the order_id in session',function(){})->todo();
+it('returns the succes view and forget the order_id in session',function(){
+    $response = $this->actingAs($this->user)->withSession(['order_id' => $this->order->id, 'checkout_completed' => true])->get(route('checkout.succes'));
 
-it('returns the cancel view and update the payment_status to cancelled and forget the order_id in session',function(){})->todo();
+    expect(session('order_id'))->toBeNull();
 
-it('validates that tickets are required', function(){})->todo();
+    $response->assertViewIs('checkout.succes')->assertViewHas('order', $this->order);
+
+});
+
+it('returns the cancel view and update the payment_status to cancelled and forget the order_id in session',function(){
+    $response = $this->actingAs($this->user)->withSession(['order_id' => $this->order->id, 'checkout_completed' => true])->get(route('checkout.cancel'));
+
+    expect(session('order_id'))->toBeNull();
+
+    assertDatabaseHas('orders', [
+        'id' => $this->order->id,
+        'payment_status' => OrderStatus::Cancelled
+    ]);
+
+    $response->assertViewIs('checkout.cancel')->assertViewHas('order', $this->order);    
+});
+
+it('validates that tickets are required', function(){
+    $response = $this->actingAs($this->user)->post(route('checkout.store'), ['tickets' => []]);
+
+    $response->assertSessionHasErrors(['tickets']);
+
+});
