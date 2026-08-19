@@ -52,6 +52,17 @@ it('calls HandleCheckoutCompletedAction when checkout session is completed', fun
 
 });
 
-it('calls HandleCheckoutExpiredAction when checkout session is expired', function(){})->todo();
+it('calls HandleCheckoutExpiredAction when checkout session is expired', function(){
+    $webhookReceivedEvent = makeWebhookReceivedEvent('checkout.session.expired', $this->order);
+
+    $this->mockedHandleCheckoutExpiredAction->shouldReceive('handle')->once()->withArgs(function($object) use($webhookReceivedEvent){
+        return $object == $webhookReceivedEvent->payload['data']['object'];
+    });
+
+    $this->mockedHandleCheckoutCompletedAction->shouldNotReceive('handle');
+
+    app(StripeWebhookListener::class)->handle($webhookReceivedEvent);
+
+});
 
 
