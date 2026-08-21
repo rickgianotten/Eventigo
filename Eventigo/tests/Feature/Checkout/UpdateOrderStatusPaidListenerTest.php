@@ -21,6 +21,10 @@ beforeEach(function(){
     $this->mockedUpdateOrderStatusPaidAction = $this->mock(UpdateOrderStatusPaidAction::class);
 });
 
+afterEach(function(){
+    Mockery::close();
+});
+
 it('calls the UpdateOrderStatusPaidAction with the order from the event', function(){
 
     $this->mockedUpdateOrderStatusPaidAction->shouldReceive('handle')->once()->withArgs(function($order){
