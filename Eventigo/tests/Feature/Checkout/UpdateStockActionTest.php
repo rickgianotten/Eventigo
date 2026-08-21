@@ -22,7 +22,7 @@ beforeEach(function(){
     OrderItem::factory(2)->create(['order_id' => $this->order->id,'ticket_id' => $this->ticket->id, 'unit_price' => $this->ticket->price]);
 });
 
-it('increment the quantity_sold for each ticket', function(){
+it('increment the quantity_sold for each orderItem for a single ticket', function(){
     $totalExtraQuantity = $this->order->orderItems()->sum('quantity');
 
     $previousQuantitySold = $this->ticket->quantity_sold;
