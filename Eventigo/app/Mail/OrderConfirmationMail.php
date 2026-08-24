@@ -19,7 +19,7 @@ class OrderConfirmationMail extends Mailable implements ShouldQueue
     /**
      * Create a new message instance.
      */
-    public function __construct(public Order $order, private array $qrCodes)
+    public function __construct(public Order $order, public array $qrCodes)
     {
         $this->order->load(['orderItems.tickets', 'orderItems.ticket', 'event']);
     }
