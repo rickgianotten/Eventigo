@@ -59,6 +59,10 @@ class Event extends Model
         return $this->tickets()->where('type', 'Free')->exists();
     }
 
+    public function isSoldOut():bool{
+        return $this->tickets->every(fn($ticket)=> $ticket->available() <= 0);
+    }
+
     public function getEventImage(){
         /** @var \Illuminate\Filesystem\FilesystemAdapter $disk */
         $disk = Storage::disk('events');
