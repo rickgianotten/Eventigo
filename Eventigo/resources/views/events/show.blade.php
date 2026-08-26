@@ -171,11 +171,18 @@
                             </div>
 
                             <div class="grid mt-8 border-t border-t-light-grey/20 pt-5 space-y-2">
-                                <div class="flex justify-between items-center">
-                                    <p class="text-light-grey text-sm"><span id="total_tickets">0</span> ticket(s)</p>
-                                    <p class="text-white font-bold text-xl">$<span id="total_price">0,00</span></p>
-                                </div>
-                                <x-form.button class="text-lg flex items-center gap-2"> <x-icons.ticket-icon class="text-white"/> order tickets</x-form.button>
+                                @if ($event->isSoldOut())
+                                    <div class="bg-red-500/20 text-center rounded-md p-3">
+                                        <p class="text-red-500 text-sm">This event is completely sold out.</p>
+                                    </div>
+                                @else
+                                    <div class="flex justify-between items-center">
+                                        <p class="text-light-grey text-sm"><span id="total_tickets">0</span> ticket(s)</p>
+                                        <p class="text-white font-bold text-xl">$<span id="total_price">0,00</span></p>
+                                    </div>                                    
+                                @endif
+
+                                <x-form.button :disabled="$event->isSoldOut()" class="text-lg flex items-center gap-2 {{$event->isSoldOut() ? 'opacity-50 disabled:cursor-not-allowed disabled:hover:opacity-50' : ''}}"> <x-icons.ticket-icon class="text-white"/> order tickets</x-form.button>
                             </div>
                         </div>
                     </x-cards.card>
