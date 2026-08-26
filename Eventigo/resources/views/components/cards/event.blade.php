@@ -23,7 +23,7 @@
                     @if($event->isFreeEvent())
                         Free
                     @else
-                        ${{number_format($event->cheapestTicketPrice(), 2, ',', '.')}}
+                        {!! $event->isSoldOut() ? '<span class="text-red-500">Sold Out</span>' : '$' . number_format($event->cheapestTicketPrice(), 2, ',', '.') !!}                      
                     @endif
                 </p>
             </div>
