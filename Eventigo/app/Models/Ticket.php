@@ -29,6 +29,10 @@ class Ticket extends Model
         return $this->quantity_available - $this->quantity_sold;
     }
 
+    public function isSoldOut():bool{
+        return $this->available() <= 0;
+    }
+
     protected $casts = [
         'price' => 'integer',
     ];
