@@ -135,38 +135,61 @@
                             <div class="grid auto-rows-max space-y-6 grow">
                                 @foreach ($event->tickets as $index => $ticket)
                                 <div class="ticket">
-                                    <x-cards.card>
-                                        <div class="p-3 space-y-2">
-                                            <div class="flex">
-                                                <h3 class="text-white font-bold flex-grow">{{$ticket->type}}</h3>
-                                                <p class="text-white font-bold">
-                                                    @if($ticket->type == "Free")
-                                                        <span class="ticket_price">Free</span>
+                                    @if($ticket->isSoldOut())
+                                        <x-cards.card>
+                                            <div class="p-3 space-y-2 grid">
+                                                <div class="flex">
+                                                    <h3 class="text-white font-bold flex-grow">{{$ticket->type}}</h3>
+                                                    <p class="text-white font-bold">
+                                                        @if($ticket->type == "Free")
+                                                            <span class="ticket_price">Free</span>
+                                                        @else
+                                                            $ <span class="ticket_price">{{$ticket->price()}}</span>                                                       
+                                                        @endif   
+                                                    </p>
+                                                </div>
+                                                <div>
+                                                    <p class="text-light-grey text-xs">{{$ticket->description}}</p>
+                                                </div>                                                    
+                                                <div class="bg-red-500/20 text-center rounded-md px-3 py-1.5">
+                                                    <p class="text-red-500 text-sm">Sold Out</p>
+                                                </div> 
+                                            </div>
+                                        </x-cards.card>
+                                    @else
+                                        <x-cards.card>
+                                            <div class="p-3 space-y-2">
+                                                <div class="flex">
+                                                    <h3 class="text-white font-bold flex-grow">{{$ticket->type}}</h3>
+                                                    <p class="text-white font-bold">
+                                                        @if($ticket->type == "Free")
+                                                            <span class="ticket_price">Free</span>
+                                                        @else
+                                                            $ <span class="ticket_price">{{$ticket->price()}}</span>                                                       
+                                                        @endif   
+                                                    </p>
+                                                </div>
+                                                <div>
+                                                    <p class="text-light-grey text-xs">{{$ticket->description}}</p>
+                                                </div>
+                                                <div class="flex items-center">
+                                                    @if($ticket->available() >= 12 )
+                                                        <p class="text-light-grey text-xs flex-grow"> <span class="max_quantity_of_tickets">{{$ticket->available()}}</span> tickets available</p>
                                                     @else
-                                                        $ <span class="ticket_price">{{$ticket->price()}}</span>                                                       
-                                                    @endif   
-                                                </p>
-                                            </div>
-                                            <div>
-                                                <p class="text-light-grey text-xs">{{$ticket->description}}</p>
-                                            </div>
-                                            <div class="flex items-center">
-                                                @if($ticket->available() >= 12 )
-                                                    <p class="text-light-grey text-xs flex-grow"> <span class="max_quantity_of_tickets">{{$ticket->available()}}</span> tickets available</p>
-                                                @else
-                                                    <p class="text-orange text-xs flex-grow">only <span class="max_quantity_of_tickets">{{$ticket->available()}}</span> tickets available!</p>
-                                                @endif
-                                                <div class="flex items-center gap-1.5">
-                                                    <button type="button" class="text-white bg-mid-blue h-5 w-5 rounded-full flex items-center justify-center p-3.5 cursor-pointer hover:opacity-90 btn_decrease">-</button>
-                                                    <input type="number" name="tickets[{{$index}}][ticket_quantity]" class="bg-transparent border-none no-spinner text-center ticket_quantity ticket_quantity text-white focus:ring-0 focus:outline-none" value="{{old('ticket.' . $index . '.ticket_quantity', 0)}}" min="0" max="{{$ticket->quantity_available}}" readonly/>
-                                                    <input type="text" name="tickets[{{$index}}][ticket_id]" value="{{$ticket->id}}" hidden/>
-                                                    <button type="button" class="text-white bg-orange h-5 w-5 rounded-full flex items-center justify-center p-3.5 cursor-pointer hover:opacity-90 btn_increase">+</button>
+                                                        <p class="text-orange text-xs flex-grow">only <span class="max_quantity_of_tickets">{{$ticket->available()}}</span> tickets available!</p>
+                                                    @endif
+                                                    <div class="flex items-center gap-1.5">
+                                                        <button type="button" class="text-white bg-mid-blue h-5 w-5 rounded-full flex items-center justify-center p-3.5 cursor-pointer hover:opacity-90 btn_decrease">-</button>
+                                                        <input type="number" name="tickets[{{$index}}][ticket_quantity]" class="bg-transparent border-none no-spinner text-center ticket_quantity ticket_quantity text-white focus:ring-0 focus:outline-none" value="{{old('ticket.' . $index . '.ticket_quantity', 0)}}" min="0" max="{{$ticket->quantity_available}}" readonly/>
+                                                        <input type="text" name="tickets[{{$index}}][ticket_id]" value="{{$ticket->id}}" hidden/>
+                                                        <button type="button" class="text-white bg-orange h-5 w-5 rounded-full flex items-center justify-center p-3.5 cursor-pointer hover:opacity-90 btn_increase">+</button>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </x-cards.card>  
+                                        </x-cards.card>  
+                                    @endif
+
                                 </div>
-            
                                 @endforeach
                             </div>
 
