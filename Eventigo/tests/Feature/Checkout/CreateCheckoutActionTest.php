@@ -34,7 +34,7 @@ afterEach(function(){
     Mockery::close();
 });
 
-it('throws an NotEnoughTicketsException when there are not enough tickets available', function(){
+it('throws a NotEnoughTicketsException when there are not enough tickets available', function(){
     $fakeTicket = Ticket::factory()->for($this->event)->create(['quantity_available' => 10,'quantity_sold' => 0]);
     $tickets = [
         [
@@ -49,7 +49,7 @@ it('throws an NotEnoughTicketsException when there are not enough tickets availa
 
 })->throws(NotEnoughTicketsException::class, 'Not enough tickets available!');
 
-it('throws an CheckoutException when checkout throws an exception', function(){
+it('throws a CheckoutException when checkout throws an exception', function(){
     $userMock = Mockery::mock($this->user);
 
     $fakeTickets = Ticket::factory(2)->for($this->event)->create(['quantity_available' => '100','quantity_sold' => '0', 'price' => '200']);
