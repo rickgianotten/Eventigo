@@ -9,6 +9,7 @@ use App\Enums\Order\OrderStatus;
 use App\Events\Checkout\OrderPaid;
 use App\Exceptions\Checkout\CheckoutException;
 use App\Exceptions\Checkout\NotEnoughTicketsException;
+use App\Exceptions\Checkout\TicketSoldOutException;
 use App\Models\Order;
 use App\Models\Ticket;
 use Error;
@@ -31,6 +32,9 @@ class CreateCheckoutAction{
             
             foreach($tickets as $ticket){
                 $lockedTicket = $lockedTickets[$ticket['ticket_id']];
+                if($lockedTicket->isSoldOut()){
+                    throw new TicketSoldOutException('This ticket is sold out!');
+                }
                 if($ticket['ticket_quantity'] > $lockedTicket->available()){
                     throw new NotEnoughTicketsException('Not enough tickets available!');
                 }
