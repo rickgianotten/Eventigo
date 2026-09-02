@@ -33,7 +33,7 @@ class CreateCheckoutAction{
             foreach($tickets as $ticket){
                 $lockedTicket = $lockedTickets[$ticket['ticket_id']];
                 if($lockedTicket->isSoldOut()){
-                    throw new TicketSoldOutException('This ticket is sold out!');
+                    throw new TicketSoldOutException("Unfortunately, the “{$lockedTicket->type}” ticket is sold out!");
                 }
                 if($ticket['ticket_quantity'] > $lockedTicket->available()){
                     throw new NotEnoughTicketsException('Not enough tickets available!');
