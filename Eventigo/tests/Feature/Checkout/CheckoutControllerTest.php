@@ -5,6 +5,7 @@ use App\Enums\Order\OrderStatus;
 use App\Enums\toast\ToastStatus;
 use App\Exceptions\Checkout\CheckoutException;
 use App\Exceptions\Checkout\NotEnoughTicketsException;
+use App\Exceptions\Checkout\TicketSoldOutException;
 use App\Models\Event;
 use App\Models\Order;
 use App\Models\Ticket;
@@ -100,6 +101,22 @@ it('returns back with toast when CheckoutException is thrown',function(){
         'title' => 'Payment Failed',
         'message' => 'Oops, something went wrong at checkout. Please try again.'
     ]);    
+});
+
+it('returns back with toats when TicketSoldOutException is thrown', function(){
+    $this->ticket->update(['quantity_available'=> '0']);
+
+    $this->mockedCreateCheckoutAction->shouldReceive('handle')->once()->withArgs(function($user, $tickets){
+        return $user->is($this->user) && $tickets  === makeRequest($this->ticket->fresh());
+    })->andThrow(new TicketSoldOutException("Unfortunately, the “{$this->ticket->type}” ticket is sold out!"));
+
+    $response = $this->actingAs($this->user)->post(route('checkout.store'), ['tickets' => makeRequest($this->ticket->fresh())]);
+
+    $response->assertRedirectBack()->assertSessionHas('toast', [
+        'status' => ToastStatus::Info,
+        'title' => null,
+        'message' => "Unfortunately, the “{$this->ticket->type}” ticket is sold out!"
+    ]);
 });
 
 it('returns the succes view and forget the order_id in session',function(){
