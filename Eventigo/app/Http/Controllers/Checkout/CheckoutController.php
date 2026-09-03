@@ -6,6 +6,7 @@ use App\Actions\Checkout\CreateCheckoutAction;
 use App\Enums\Order\OrderStatus;
 use App\Enums\toast\ToastStatus;
 use App\Exceptions\Checkout\CheckoutException;
+use App\Exceptions\Checkout\EventSoldOutException;
 use App\Exceptions\Checkout\NotEnoughTicketsException;
 use App\Exceptions\Checkout\TicketSoldOutException;
 use App\Http\Controllers\Controller;
@@ -30,7 +31,7 @@ class CheckoutController extends Controller
 
             return $result;
             
-        } catch (NotEnoughTicketsException | TicketSoldOutException $e) {
+        } catch (NotEnoughTicketsException | TicketSoldOutException | EventSoldOutException $e) {
             return back()->with('toast', [
                 'status' => ToastStatus::Info,
                 'title' => null,
