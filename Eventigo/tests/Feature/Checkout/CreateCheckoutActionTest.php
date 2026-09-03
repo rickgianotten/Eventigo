@@ -102,6 +102,21 @@ it('throws a TicketSoldOutException when a ticket is sold out', function(){
 
 });
 
+it('throws an EventSoldOutException when the event is sold out', function(){
+    $fakeTickets = Ticket::factory(2)->for($this->event)->create(['quantity_sold' => '10', 'quantity_available' => '10']);
+
+    $tickets = $fakeTickets->map(function ($ticket) {
+        return [
+            'ticket_id' => $ticket->id,
+            'ticket_quantity' => '2'
+        ];
+    })->toArray();
+
+    app(CreateCheckoutAction::class)->handle($this->user, $tickets);
+
+    $this->createOrderAction->shouldNotReceive('handle');
+
+})->throws(EventSoldOutException::class, 'Unfortunately, this event is completely sold out!');
 
 it('filter out tickets with quantity 0',function(){
     $userMock = Mockery::mock($this->user);
