@@ -112,9 +112,9 @@ it('throws an EventSoldOutException when the event is sold out', function(){
         ];
     })->toArray();
 
-    app(CreateCheckoutAction::class)->handle($this->user, $tickets);
-
     $this->createOrderAction->shouldNotReceive('handle');
+    
+    app(CreateCheckoutAction::class)->handle($this->user, $tickets);
 
 })->throws(EventSoldOutException::class, 'Unfortunately, this event is completely sold out!');
 
