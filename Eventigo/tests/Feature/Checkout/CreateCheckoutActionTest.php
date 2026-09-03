@@ -5,6 +5,7 @@ use App\Actions\Checkout\CreateOrderAction;
 use App\Enums\Order\OrderStatus;
 use App\Events\Checkout\OrderPaid;
 use App\Exceptions\Checkout\CheckoutException;
+use App\Exceptions\Checkout\EventSoldOutException;
 use App\Exceptions\Checkout\NotEnoughTicketsException;
 use App\Exceptions\Checkout\TicketSoldOutException;
 use App\Models\Event as ModelsEvent;
@@ -80,20 +81,27 @@ it('throws a CheckoutException when checkout throws an exception', function(){
 })->throws(CheckoutException::class, 'Oops, something went wrong at checkout. Please try again.');
 
 it('throws a TicketSoldOutException when a ticket is sold out', function(){
-    $fakeTicket = Ticket::factory()->for($this->event)->create(['quantity_available' => '10','quantity_sold' => '10']);
+    $fakeTicketSoldOut = Ticket::factory()->for($this->event)->create(['quantity_available' => '10','quantity_sold' => '10']);
+    $fakeTicket = Ticket::factory()->for($this->event)->create(['quantity_available' => '10','quantity_sold' => '2']);
+
     $tickets = [
+        [
+        'ticket_id' => $fakeTicketSoldOut->id,
+        'ticket_quantity' => '2',
+        ],
         [
         'ticket_id' => $fakeTicket->id,
         'ticket_quantity' => '2',
-        ]
+        ]        
     ];
 
     $this->createOrderAction->shouldNotReceive('handle');
 
     expect(fn() => app(CreateCheckoutAction::class)->handle($this->user, $tickets))
-    ->toThrow(TicketSoldOutException::class, "Unfortunately, the “{$fakeTicket->type}” ticket is sold out!");
+    ->toThrow(TicketSoldOutException::class, "Unfortunately, the “{$fakeTicketSoldOut->type}” ticket is sold out!");
 
 });
+
 
 it('filter out tickets with quantity 0',function(){
     $userMock = Mockery::mock($this->user);
