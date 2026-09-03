@@ -8,6 +8,7 @@ use App\Actions\Checkout\CreateOrderAction;
 use App\Enums\Order\OrderStatus;
 use App\Events\Checkout\OrderPaid;
 use App\Exceptions\Checkout\CheckoutException;
+use App\Exceptions\Checkout\EventSoldOutException;
 use App\Exceptions\Checkout\NotEnoughTicketsException;
 use App\Exceptions\Checkout\TicketSoldOutException;
 use App\Models\Order;
@@ -29,6 +30,12 @@ class CreateCheckoutAction{
         [$order, $lockedTickets] = DB::transaction(function() use ($user, $tickets){
             $ticketIds = collect($tickets)->pluck('ticket_id');
             $lockedTickets = Ticket::lockForUpdate()->whereIn('id', $ticketIds)->get()->keyBy('id');
+
+            $event = $lockedTickets->first()->event;
+            
+            if($event->isSoldOut()){
+                throw new EventSoldOutException('Unfortunately, this event is completely sold out!');
+            }
             
             foreach($tickets as $ticket){
                 $lockedTicket = $lockedTickets[$ticket['ticket_id']];
