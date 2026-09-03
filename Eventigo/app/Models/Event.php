@@ -60,7 +60,7 @@ class Event extends Model
     }
 
     public function isSoldOut():bool{
-        return $this->tickets->every(fn($ticket)=> $ticket->available() <= 0);
+        return $this->tickets->every(fn($ticket)=> $ticket->isSoldOut());
     }
 
     public function getEventImage(){
